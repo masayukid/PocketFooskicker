@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 public class GameController : MonoBehaviour
 {
-    private const float BALL_RESPAWN_SPEED = 0.10f;     // ボールを再生成する下限速度
-    private const float BALL_RESPAWN_TIMEOUT = 5.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
+    private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
+    private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
 
     [SerializeField] private Color _selfPlayerColor;
     [SerializeField] private Color _opponentPlayerColor;
@@ -16,6 +17,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private Goal _opponentGoal;
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
+    [Header("CPU Settings")]
+    [SerializeField] private CPUConfig _cpuConfig;
+    [SerializeField] private string _cpuModeName;
 
     private SelfPlayer _selfPlayer;
     private OpponentPlayer _opponentPlayer;
@@ -57,9 +61,36 @@ public class GameController : MonoBehaviour
 
     private void Initialize()
     {
+        SetupPlayers();
+        _selfGoal.OnGoal += OnGoal;
+        _opponentGoal.OnGoal += OnGoal;
+
+        _currentBall = null;
+        ResetRespawnTimer();
+        _isSelfTurn = true;
+        _isKickedOff = false;
+    }
+
+    private void SetupPlayers()
+    {
         var selfRodControllers = _selfPlayerSet.GetComponentsInChildren<RodController>();
         var inputHandlers = _controlAreas.GetComponentsInChildren<IRodInputHandler>();
+
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
+        var ballTransform = _ballPrefab.transform;
+        var settings = _cpuConfig.GetSettingsByName(_cpuModeName);
+
+        var cpuInputHandlers = opponentRodControllers.Select(rod =>
+        {
+            var dolls = rod.GetComponentsInChildren<Doll>();
+            return new CPURodInputHandler(
+                ballTransform,
+                rod.transform,
+                dolls,
+                settings.moveSpeed,
+                settings.rotationSpeed
+            ) as IRodInputHandler;
+        }).ToArray();
 
         _selfPlayer = new SelfPlayer(
             _selfPlayerColor,
@@ -71,16 +102,9 @@ public class GameController : MonoBehaviour
         _opponentPlayer = new OpponentPlayer(
             _opponentPlayerColor,
             opponentRodControllers,
-            _opponentScorePanel
+            _opponentScorePanel,
+            cpuInputHandlers
         );
-        
-        _currentBall = null;
-        _respawnTimer = 0;
-        _isSelfTurn = true;
-        _isKickedOff = false;
-
-        _selfGoal.OnGoal += OnGoal;
-        _opponentGoal.OnGoal += OnGoal;
     }
 
     private void OnGoal(Goal goal)
@@ -112,6 +136,20 @@ public class GameController : MonoBehaviour
         _currentBall = ballObject.GetComponent<Ball>();
         _currentBall.OnTouch += OnTouchBall;
         _isKickedOff = false;
+        UpdateCPUHandlers(_currentBall.transform);
+    }
+
+    private void UpdateCPUHandlers(Transform newBallTransform)
+    {
+        var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
+        foreach (var rodController in opponentRodControllers)
+        {
+            if (rodController.GetInputHandler() is CPURodInputHandler cpuHandler)
+            {
+                cpuHandler.UpdateBallTransform(newBallTransform);
+                Debug.Log($"Updated Ball Transform for Rod: {rodController.name}");
+            }
+        }
     }
 
     private void OnTouchBall()

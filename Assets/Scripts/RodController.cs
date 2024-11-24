@@ -2,7 +2,7 @@
 
 public class RodController : MonoBehaviour
 {
-    private const float MOVE_RANGE = 1.35f; // 可動範囲
+    public const float MOVE_RANGE = 1.35f; // 可動範囲
 
     [SerializeField] private Transform _rodTransform;
     [SerializeField] private GameObject _dollsObject;
@@ -22,6 +22,11 @@ public class RodController : MonoBehaviour
     public void RegisterHandler(IRodInputHandler inputHandler)
     {
         _inputHandler = inputHandler;
+    }
+
+    public IRodInputHandler GetInputHandler()
+    {
+        return _inputHandler;
     }
 
     void Awake()
