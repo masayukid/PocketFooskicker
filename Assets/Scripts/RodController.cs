@@ -2,7 +2,7 @@
 
 public class RodController : MonoBehaviour
 {
-    public const float MOVE_RANGE = 1.35f; // 可動範囲
+    private const float MOVE_RANGE = 1.35f; // 可動範囲
 
     [SerializeField] private Transform _rodTransform;
     [SerializeField] private GameObject _dollsObject;
