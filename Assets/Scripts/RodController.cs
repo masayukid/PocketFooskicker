@@ -60,6 +60,19 @@ public class RodController : MonoBehaviour
         _dolls = _dollsObject.GetComponentsInChildren<Doll>();
     }
 
+    private void InitializeDollMoveRanges()
+    {
+        CalculateBushingDistances();
+
+        foreach (var doll in _dolls)
+        {
+            float initialZ = doll.GetPosition().z;
+            float minZ = initialZ - _bottomBushingDistance;
+            float maxZ = initialZ + _topBushingDistance;
+            doll.SetMoveRange(minZ, maxZ);
+        }
+    }
+
     private void CalculateBushingDistances()
     {
         if (_dolls.Length == 0)
@@ -72,19 +85,6 @@ public class RodController : MonoBehaviour
 
         _topBushingDistance = Mathf.Abs(_topBushing.position.z - topDollZ);
         _bottomBushingDistance = Mathf.Abs(_bottomBushing.position.z - bottomDollZ);
-    }
-
-    private void InitializeDollMoveRanges()
-    {
-        CalculateBushingDistances();
-
-        foreach (var doll in _dolls)
-        {
-            float initialZ = doll.GetPosition().z;
-            float minZ = initialZ - _bottomBushingDistance;
-            float maxZ = initialZ + _topBushingDistance;
-            doll.SetMoveRange(minZ, maxZ);
-        }
     }
 
     private void HandleMovement()
