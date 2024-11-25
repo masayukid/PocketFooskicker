@@ -8,7 +8,7 @@ public class CPURodInputHandler : IRodInputHandler
 
     private float _moveSpeed;
     private float _rotationSpeed;
-    private const float REACTION_DISTANCE = 1.5f; // ボールに反応する最大距離
+    private const float REACTION_DISTANCE = 1.3f; // ボールに反応する最大距離
     private const float ROTATION_MULTIPLIER = 300f;
 
     public CPURodInputHandler(Ball ball, RodController rodController)
