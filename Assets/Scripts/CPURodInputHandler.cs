@@ -61,6 +61,7 @@ public class CPURodInputHandler : IRodInputHandler
         foreach (var doll in _dolls)
         {
             float distance = Vector3.Distance(doll.transform.position, _ball.GetPosition());
+
             if (distance < minDistance)
             {
                 minDistance = distance;
