@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CPURodInputHandler : IRodInputHandler
 {
-    private const float REACTION_DISTANCE = 1.5f; // ボールに反応する最大距離
+    private const float REACTION_DISTANCE = 1.6f; // ボールに反応する最大距離
     private const float ROTATION_MULTIPLIER = 300f;
 
     private Ball _ball;
@@ -50,7 +50,7 @@ public class CPURodInputHandler : IRodInputHandler
             return 0;
         }
 
-        return CalculateRotationDelta(nearestDoll);
+        return CalculateRotationDelta();
     }
 
     private Doll FindNearestDoll()
@@ -92,12 +92,8 @@ public class CPURodInputHandler : IRodInputHandler
         return Mathf.MoveTowards(currentZ, desiredRodZ, _moveSpeed * Time.fixedDeltaTime) - currentZ;
     }
     
-    private float CalculateRotationDelta(Doll nearestDoll)
+    private float CalculateRotationDelta()
     {
-        Vector3 direction = _ball.GetPosition() - nearestDoll.GetPosition();
-        float targetAngle = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
-        float currentAngle = _rodController.GetRotationZ();
-
-        return Mathf.Sign(Mathf.DeltaAngle(currentAngle, targetAngle)) * _rotationSpeed * Time.fixedDeltaTime;
+        return _rotationSpeed * Time.fixedDeltaTime;
     }
 }

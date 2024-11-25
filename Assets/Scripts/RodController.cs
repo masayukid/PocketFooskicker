@@ -49,11 +49,6 @@ public class RodController : MonoBehaviour
         return _rodTransform.position.z;
     }
 
-    public float GetRotationZ()
-    {
-        return _rodTransform.eulerAngles.z;
-    }
-
     private void InitializeComponents()
     {
         _rodRigidbody = _rodTransform.GetComponent<Rigidbody>();
