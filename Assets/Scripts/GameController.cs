@@ -42,35 +42,14 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (_currentBall == null || !_isKickedOff)
-        {
-            return;
-        }
-
-        if (_currentBall.GetCurrentSpeed() > BALL_RESPAWN_SPEED)
-        {
-            ResetRespawnTimer();
-            return;
-        }
-
-        _respawnTimer += Time.deltaTime;
-
-        if (_respawnTimer > BALL_RESPAWN_TIMEOUT)
-        {
-            SpawnBall(_isSelfTurn);
-        }
+        HandleBallRespawn();
     }
 
     private void Initialize()
     {
         SetupPlayers();
-        _selfGoal.OnGoal += OnGoal;
-        _opponentGoal.OnGoal += OnGoal;
-
-        _currentBall = null;
-        ResetRespawnTimer();
-        _isSelfTurn = true;
-        _isKickedOff = false;
+        SubscribeToGoals();
+        ResetGameState();
     }
 
     private void SetupPlayers()
@@ -79,12 +58,10 @@ public class GameController : MonoBehaviour
         var inputHandlers = _controlAreas.GetComponentsInChildren<IRodInputHandler>();
 
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
-        var ballTransform = _ballPrefab.transform;
-        if (!System.Enum.TryParse(_cpuModeName, out CPUMode cpuMode))
-        {
-            return;
-        }
-        var settings = _cpuConfig.GetSettingsByName(cpuMode);
+        if (!System.Enum.TryParse(_cpuModeName, out CPUMode cpuMode)) return;
+
+        var settings = _cpuConfig.GetSettingsByMode(cpuMode);
+
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
         {
             var handler = new CPURodInputHandler(_currentBall, rod);
@@ -115,19 +92,18 @@ public class GameController : MonoBehaviour
         );
     }
 
-    private void OnGoal(Goal goal)
+    private void SubscribeToGoals()
     {
-        if (goal.IsSelf)
-        {
-            _opponentPlayer.AddScore();
-        }
-        else
-        {
-            _selfPlayer.AddScore();
-        }
+        _selfGoal.OnGoal += OnGoal;
+        _opponentGoal.OnGoal += OnGoal;
+    }
 
-        _isSelfTurn = goal.IsSelf;
-        SpawnBall(_isSelfTurn);
+    private void ResetGameState()
+    {
+        _currentBall = null;
+        ResetRespawnTimer();
+        _isSelfTurn = true;
+        _isKickedOff = false;
     }
 
     private void SpawnBall(bool isSelf)
@@ -144,7 +120,41 @@ public class GameController : MonoBehaviour
         _currentBall = ballObject.GetComponent<Ball>();
         _currentBall.OnTouch += OnTouchBall;
         _isKickedOff = false;
+
         OnSpawnBall?.Invoke(_currentBall);
+    }
+
+    private void HandleBallRespawn()
+    {
+        if (_currentBall == null || !_isKickedOff) return;
+
+        if (_currentBall.GetCurrentSpeed() > BALL_RESPAWN_SPEED)
+        {
+            ResetRespawnTimer();
+            return;
+        }
+
+        _respawnTimer += Time.deltaTime;
+
+        if (_respawnTimer > BALL_RESPAWN_TIMEOUT)
+        {
+            SpawnBall(_isSelfTurn);
+        }
+    }
+
+    private void OnGoal(Goal goal)
+    {
+        if (goal.IsSelf)
+        {
+            _opponentPlayer.AddScore();
+        }
+        else
+        {
+            _selfPlayer.AddScore();
+        }
+
+        _isSelfTurn = goal.IsSelf;
+        SpawnBall(_isSelfTurn);
     }
 
     private void OnTouchBall()

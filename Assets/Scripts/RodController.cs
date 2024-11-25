@@ -11,6 +11,23 @@ public class RodController : MonoBehaviour
     private Doll[] _dolls;
     private IRodInputHandler _inputHandler;
 
+    void Awake()
+    {
+        InitializeComponents();
+    }
+
+    void FixedUpdate()
+    {
+        if (_inputHandler == null || _rodRigidbody == null) return;
+
+        HandleMovement();
+    }
+
+    public void RegisterHandler(IRodInputHandler inputHandler)
+    {
+        _inputHandler = inputHandler;
+    }
+
     public void SetColor(Color color)
     {
         foreach (var doll in _dolls)
@@ -19,29 +36,19 @@ public class RodController : MonoBehaviour
         }
     }
 
-    public void RegisterHandler(IRodInputHandler inputHandler)
-    {
-        _inputHandler = inputHandler;
-    }
-
     public Doll[] GetDolls()
     {
         return _dolls;
     }
 
-    void Awake()
+    private void InitializeComponents()
     {
         _rodRigidbody = _rodTransform.GetComponent<Rigidbody>();
         _dolls = _dollsObject.GetComponentsInChildren<Doll>();
     }
 
-    void FixedUpdate()
+    private void HandleMovement()
     {
-        if (_inputHandler == null || _rodRigidbody == null)
-        {
-            return;
-        }
-
         MovePosition(_rodTransform.position.z + _inputHandler.GetMovementDelta());
         MoveRotation(_rodTransform.eulerAngles.z + _inputHandler.GetRotationDelta());
     }

@@ -18,7 +18,7 @@ public class CPUConfig : ScriptableObject
     [Header("CPU Modes Settings")]
     [SerializeField] private ModeSettings[] _modeSettings;
 
-    public ModeSettings GetSettingsByName(CPUMode mode)
+    public ModeSettings GetSettingsByMode(CPUMode mode)
     {
         foreach (var settings in _modeSettings)
         {

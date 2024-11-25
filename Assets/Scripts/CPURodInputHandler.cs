@@ -17,20 +17,22 @@ public class CPURodInputHandler : IRodInputHandler
         _rodController = rodController;
         _dolls = rodController.GetDolls();
     }
-    
+
     public void ApplyCPUSettings(CPUConfig.ModeSettings settings)
     {
         _moveSpeed = settings.MoveSpeed;
         _rotationSpeed = settings.RotationSpeed * ROTATION_MULTIPLIER;
     }
 
+    public void UpdateBallTransform(Ball newBall)
+    {
+        _ball = newBall;
+    }
+
     public float GetMovementDelta()
     {
         Doll nearestDoll = FindNearestDoll();
-        if (!IsWithinReactionDistance(nearestDoll))
-        {
-            return 0;
-        }
+        if (!IsWithinReactionDistance(nearestDoll)) return 0;
 
         return CalculateMovementDelta(nearestDoll);
     }
@@ -38,10 +40,7 @@ public class CPURodInputHandler : IRodInputHandler
     public float GetRotationDelta()
     {
         Doll nearestDoll = FindNearestDoll();
-        if (!IsWithinReactionDistance(nearestDoll))
-        {
-            return 0;
-        }
+        if (!IsWithinReactionDistance(nearestDoll)) return 0;
 
         return CalculateRotationDelta(nearestDoll);
     }
@@ -66,10 +65,7 @@ public class CPURodInputHandler : IRodInputHandler
 
     private bool IsWithinReactionDistance(Doll nearestDoll)
     {
-        if (nearestDoll == null)
-        {
-            return false;
-        }
+        if (nearestDoll == null) return false;
 
         float xDistance = Mathf.Abs(nearestDoll.transform.position.x - _ball.transform.position.x);
         return xDistance <= REACTION_DISTANCE;
@@ -79,23 +75,17 @@ public class CPURodInputHandler : IRodInputHandler
     {
         float targetZ = _ball.transform.position.z;
         float currentZ = _rodController.transform.position.z;
-
         float desiredRodZ = currentZ + (targetZ - nearestDoll.transform.position.z);
 
         return Mathf.MoveTowards(currentZ, desiredRodZ, _moveSpeed * Time.fixedDeltaTime) - currentZ;
     }
-
-    private float CalculateRotationDelta(Doll nearestDoll)  
+    
+    private float CalculateRotationDelta(Doll nearestDoll)
     {
         Vector3 direction = _ball.transform.position - nearestDoll.transform.position;
         float targetAngle = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
         float currentAngle = _rodController.transform.eulerAngles.z;
 
         return Mathf.Sign(Mathf.DeltaAngle(currentAngle, targetAngle)) * _rotationSpeed * Time.fixedDeltaTime;
-    }
-
-    public void UpdateBallTransform(Ball newBall)
-    {
-        _ball = newBall;
     }
 }
