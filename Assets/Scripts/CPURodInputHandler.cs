@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class CPURodInputHandler : IRodInputHandler
 {
+    private const float REACTION_DISTANCE = 1.5f; // ボールに反応する最大距離
+    private const float ROTATION_MULTIPLIER = 300f;
+
     private Ball _ball;
     private readonly RodController _rodController;
     private readonly Doll[] _dolls;
-
     private float _moveSpeed;
     private float _rotationSpeed;
-    private const float REACTION_DISTANCE = 1.5f; // ボールに反応する最大距離
-    private const float ROTATION_MULTIPLIER = 300f;
 
     public CPURodInputHandler(Ball ball, RodController rodController)
     {
@@ -24,7 +24,7 @@ public class CPURodInputHandler : IRodInputHandler
         _rotationSpeed = settings.RotationSpeed * ROTATION_MULTIPLIER;
     }
 
-    public void UpdateBallTransform(Ball newBall)
+    public void UpdateBallReference(Ball newBall)
     {
         _ball = newBall;
     }

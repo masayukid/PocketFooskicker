@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44300613, g: 0.49219495, b: 0.5719239, a: 1}
+  m_IndirectSpecularColor: {r: 0.44300658, g: 0.4921953, b: 0.57192475, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1691,7 +1691,7 @@ MonoBehaviour:
     type: 3}
   _ballInitialOffset: {x: -0.75, y: 0.4}
   _cpuConfig: {fileID: 11400000, guid: b5ea1a4b274fa463da4428a8f5631b4b, type: 2}
-  _cpuModeName: Normal
+  _cpuMode: 1
 --- !u!1 &1560644276
 GameObject:
   m_ObjectHideFlags: 0

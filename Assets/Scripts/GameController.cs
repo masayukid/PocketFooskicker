@@ -5,6 +5,7 @@ using System.Linq;
 public class GameController : MonoBehaviour
 {
     public event Action<Ball> OnSpawnBall;
+
     private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
     private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
 
@@ -21,7 +22,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Vector2 _ballInitialOffset;
     [Header("CPU Settings")]
     [SerializeField] private CPUConfig _cpuConfig;
-    [SerializeField] private string _cpuModeName;
+    [SerializeField] private CPUMode _cpuMode;
 
     private SelfPlayer _selfPlayer;
     private OpponentPlayer _opponentPlayer;
@@ -58,23 +59,18 @@ public class GameController : MonoBehaviour
         var inputHandlers = _controlAreas.GetComponentsInChildren<IRodInputHandler>();
 
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
-        if (!System.Enum.TryParse(_cpuModeName, out CPUMode cpuMode)) return;
-
-        var settings = _cpuConfig.GetSettingsByMode(cpuMode);
+        var settings = _cpuConfig.GetSettingsByMode(_cpuMode);
 
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
         {
             var handler = new CPURodInputHandler(_currentBall, rod);
-            OnSpawnBall += handler.UpdateBallTransform;
-            return handler as IRodInputHandler;
+            OnSpawnBall += handler.UpdateBallReference;
+            return handler;
         }).ToArray();
 
-        foreach (var handler in cpuInputHandlers)
+        foreach (var cpuHandler in cpuInputHandlers)
         {
-            if (handler is CPURodInputHandler cpuHandler)
-            {
-                cpuHandler.ApplyCPUSettings(settings);
-            }
+            cpuHandler.ApplyCPUSettings(settings);
         }
 
         _selfPlayer = new SelfPlayer(
