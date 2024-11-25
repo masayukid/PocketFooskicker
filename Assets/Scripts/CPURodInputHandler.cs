@@ -60,10 +60,9 @@ public class CPURodInputHandler : IRodInputHandler
 
         foreach (var doll in _dolls)
         {
-            var moveRange = doll.GetMoveRange();
             float ballZ = _ball.GetPosition().z;
 
-            if (ballZ < moveRange.minZ || ballZ > moveRange.maxZ)
+            if (!doll.IsWithinMoveRange(ballZ))
             {
                 continue;
             }
