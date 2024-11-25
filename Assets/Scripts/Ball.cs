@@ -21,9 +21,9 @@ public class Ball : MonoBehaviour
     {
         return _rigidbody.velocity.magnitude;
     }
-    
+
     public Vector3 GetPosition()
     {
-        return transform.position;
+        return _rigidbody.position;
     }
 }
