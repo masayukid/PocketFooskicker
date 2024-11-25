@@ -20,9 +20,9 @@ public class Doll : MonoBehaviour
         _maxZ = maxZ;
     }
 
-    public (float minZ, float maxZ) GetMoveRange()
+    public bool IsWithinMoveRange(float z)
     {
-        return (_minZ, _maxZ);
+        return _minZ < z && z < _maxZ;
     }
 
     public Vector3 GetPosition()

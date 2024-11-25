@@ -3,15 +3,17 @@
 public class RodController : MonoBehaviour
 {
     private const float MOVE_RANGE = 1.35f; // 可動範囲
-    private const float TOP_WALL_GAP = 2.0f; // 一番上のdollと上の壁との隙間
-    private const float BOTTOM_WALL_GAP = 2.0f; //　一番下のdollと下の壁との隙間
 
+    [SerializeField] private Transform _topBushing;
+    [SerializeField] private Transform _bottomBushing;
     [SerializeField] private Transform _rodTransform;
     [SerializeField] private GameObject _dollsObject;
 
     private Rigidbody _rodRigidbody;
     private Doll[] _dolls;
     private IRodInputHandler _inputHandler;
+    private float _topBushingDistance;    // 上部のDollとBushingの距離
+    private float _bottomBushingDistance; // 下部のDollとBushingの距離
 
     void Awake()
     {
@@ -58,13 +60,29 @@ public class RodController : MonoBehaviour
         _dolls = _dollsObject.GetComponentsInChildren<Doll>();
     }
 
+    private void CalculateBushingDistances()
+    {
+        if (_dolls.Length == 0)
+        {
+            return;
+        }
+
+        float topDollZ = _dolls[0].GetPosition().z;
+        float bottomDollZ = _dolls[_dolls.Length - 1].GetPosition().z;
+
+        _topBushingDistance = Mathf.Abs(_topBushing.position.z - topDollZ);
+        _bottomBushingDistance = Mathf.Abs(_bottomBushing.position.z - bottomDollZ);
+    }
+
     private void InitializeDollMoveRanges()
     {
+        CalculateBushingDistances();
+
         foreach (var doll in _dolls)
         {
             float initialZ = doll.GetPosition().z;
-            float minZ = initialZ - BOTTOM_WALL_GAP;
-            float maxZ = initialZ + TOP_WALL_GAP;
+            float minZ = initialZ - _bottomBushingDistance;
+            float maxZ = initialZ + _topBushingDistance;
             doll.SetMoveRange(minZ, maxZ);
         }
     }
