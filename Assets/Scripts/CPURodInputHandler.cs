@@ -32,7 +32,11 @@ public class CPURodInputHandler : IRodInputHandler
     public float GetMovementDelta()
     {
         Doll nearestDoll = FindNearestDoll();
-        if (!IsWithinReactionDistance(nearestDoll)) return 0;
+
+        if (!IsWithinReactionDistance(nearestDoll))
+        {
+            return 0;
+        }
 
         return CalculateMovementDelta(nearestDoll);
     }
@@ -40,7 +44,11 @@ public class CPURodInputHandler : IRodInputHandler
     public float GetRotationDelta()
     {
         Doll nearestDoll = FindNearestDoll();
-        if (!IsWithinReactionDistance(nearestDoll)) return 0;
+
+        if (!IsWithinReactionDistance(nearestDoll))
+        {
+            return 0;
+        }
 
         return CalculateRotationDelta(nearestDoll);
     }
@@ -53,6 +61,7 @@ public class CPURodInputHandler : IRodInputHandler
         foreach (var doll in _dolls)
         {
             float distance = Vector3.Distance(doll.transform.position, _ball.transform.position);
+
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -65,7 +74,10 @@ public class CPURodInputHandler : IRodInputHandler
 
     private bool IsWithinReactionDistance(Doll nearestDoll)
     {
-        if (nearestDoll == null) return false;
+        if (nearestDoll == null)
+        {
+            return false;
+        }
 
         float xDistance = Mathf.Abs(nearestDoll.transform.position.x - _ball.transform.position.x);
         return xDistance <= REACTION_DISTANCE;

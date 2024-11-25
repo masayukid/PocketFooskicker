@@ -122,7 +122,10 @@ public class GameController : MonoBehaviour
 
     private void HandleBallRespawn()
     {
-        if (_currentBall == null || !_isKickedOff) return;
+        if (_currentBall == null || !_isKickedOff)
+        {
+            return;
+        }
 
         if (_currentBall.GetCurrentSpeed() > BALL_RESPAWN_SPEED)
         {

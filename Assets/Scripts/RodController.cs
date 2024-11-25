@@ -18,7 +18,10 @@ public class RodController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_inputHandler == null || _rodRigidbody == null) return;
+        if (_inputHandler == null || _rodRigidbody == null)
+        {
+            return;
+        }
 
         HandleMovement();
     }
