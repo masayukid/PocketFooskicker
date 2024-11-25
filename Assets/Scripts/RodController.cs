@@ -3,6 +3,8 @@
 public class RodController : MonoBehaviour
 {
     private const float MOVE_RANGE = 1.35f; // 可動範囲
+    private const float TOP_WALL_GAP = 2.0f; // 上の壁との隙間
+    private const float BOTTOM_WALL_GAP = 2.0f; //　下の壁との隙間
 
     [SerializeField] private Transform _rodTransform;
     [SerializeField] private GameObject _dollsObject;
@@ -14,6 +16,7 @@ public class RodController : MonoBehaviour
     void Awake()
     {
         InitializeComponents();
+        InitializeDollMoveRanges();
     }
 
     void FixedUpdate()
@@ -53,6 +56,17 @@ public class RodController : MonoBehaviour
     {
         _rodRigidbody = _rodTransform.GetComponent<Rigidbody>();
         _dolls = _dollsObject.GetComponentsInChildren<Doll>();
+    }
+
+    private void InitializeDollMoveRanges()
+    {
+        foreach (var doll in _dolls)
+        {
+            float initialZ = doll.GetPosition().z;
+            float minZ = initialZ - BOTTOM_WALL_GAP;
+            float maxZ = initialZ + TOP_WALL_GAP;
+            doll.SetMoveRange(minZ, maxZ);
+        }
     }
 
     private void HandleMovement()
