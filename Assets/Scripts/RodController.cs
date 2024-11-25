@@ -24,11 +24,6 @@ public class RodController : MonoBehaviour
         _inputHandler = inputHandler;
     }
 
-    public IRodInputHandler GetInputHandler()
-    {
-        return _inputHandler;
-    }
-
     public Doll[] GetDolls()
     {
         return _dolls;
