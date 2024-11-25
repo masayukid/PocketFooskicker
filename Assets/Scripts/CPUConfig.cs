@@ -6,22 +6,26 @@ public class CPUConfig : ScriptableObject
     [System.Serializable]
     public class ModeSettings
     {
-        public string modeName;     // モード名 (例: Easy, Normal, Hard)
-        public float moveSpeed;     // 横移動速度
-        public float rotationSpeed; // 回転速度
+        [SerializeField] private CPUMode _mode;     // モード名 (例: Easy, Normal, Hard)
+        [SerializeField] private float _moveSpeed;     // 横移動速度
+        [SerializeField] private float _rotationSpeed; // 回転速度
+
+        public CPUMode Mode => _mode;
+        public float MoveSpeed => _moveSpeed;
+        public float RotationSpeed => _rotationSpeed;
     }
 
     [Header("CPU Modes Settings")]
-    public ModeSettings[] modeSettings;
+    [SerializeField] private ModeSettings[] _modeSettings;
 
-    public ModeSettings GetSettingsByName(string modeName)
+    public ModeSettings GetSettingsByName(CPUMode mode)
     {
-        foreach (var settings in modeSettings)
+        foreach (var settings in _modeSettings)
         {
-            if (settings.modeName == modeName)
+            if (settings.Mode == mode)
                 return settings;
         }
         
-        return modeSettings.Length > 0 ? modeSettings[0] : null;
+        return _modeSettings.Length > 0 ? _modeSettings[0] : null;
     }
 }

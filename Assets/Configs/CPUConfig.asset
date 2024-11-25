@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb203be04cd124a01b919e9364ff44bb, type: 3}
   m_Name: CPUConfig
   m_EditorClassIdentifier: 
-  modeSettings:
-  - modeName: Easy
-    moveSpeed: 5
-    rotationSpeed: 1.5
-  - modeName: Normal
-    moveSpeed: 10
-    rotationSpeed: 2.5
-  - modeName: Hard
-    moveSpeed: 20
-    rotationSpeed: 4
+  _modeSettings:
+  - _mode: 0
+    _moveSpeed: 10
+    _rotationSpeed: 2
+  - _mode: 1
+    _moveSpeed: 20
+    _rotationSpeed: 4
+  - _mode: 2
+    _moveSpeed: 30
+    _rotationSpeed: 7
