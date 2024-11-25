@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Linq;
 
 public class GameController : MonoBehaviour
 {
+    public event Action<Ball> OnSpawnBall;
     private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
     private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
 
@@ -85,10 +87,9 @@ public class GameController : MonoBehaviour
         var settings = _cpuConfig.GetSettingsByName(cpuMode);
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
         {
-            return new CPURodInputHandler(
-                _currentBall,
-                rod
-            ) as IRodInputHandler;
+            var handler = new CPURodInputHandler(_currentBall, rod);
+            OnSpawnBall += handler.UpdateBallTransform;
+            return handler as IRodInputHandler;
         }).ToArray();
 
         foreach (var handler in cpuInputHandlers)
@@ -143,19 +144,7 @@ public class GameController : MonoBehaviour
         _currentBall = ballObject.GetComponent<Ball>();
         _currentBall.OnTouch += OnTouchBall;
         _isKickedOff = false;
-        UpdateCPUHandlers(_currentBall);
-    }
-
-    private void UpdateCPUHandlers(Ball newBall)
-    {
-        var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
-        foreach (var rodController in opponentRodControllers)
-        {
-            if (rodController.GetInputHandler() is CPURodInputHandler cpuHandler)
-            {
-                cpuHandler.UpdateBallTransform(newBall);
-            }
-        }
+        OnSpawnBall?.Invoke(_currentBall);
     }
 
     private void OnTouchBall()
