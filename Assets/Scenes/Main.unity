@@ -2481,6 +2481,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4263888113322550930, guid: 3006f442da1453e489fcc1885e437dad,
+        type: 3}
+      propertyPath: _topBushing
+      value: 
+      objectReference: {fileID: 1515322176}
+    - target: {fileID: 4263888113322550930, guid: 3006f442da1453e489fcc1885e437dad,
+        type: 3}
+      propertyPath: _bottomBushing
+      value: 
+      objectReference: {fileID: 1777501652}
     - target: {fileID: 5902365063221331006, guid: 3006f442da1453e489fcc1885e437dad,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -2496,6 +2506,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7998832192169840124, guid: 3006f442da1453e489fcc1885e437dad,
+        type: 3}
+      propertyPath: _topBushing
+      value: 
+      objectReference: {fileID: 1028854851}
+    - target: {fileID: 7998832192169840124, guid: 3006f442da1453e489fcc1885e437dad,
+        type: 3}
+      propertyPath: _bottomBushing
+      value: 
+      objectReference: {fileID: 1547644288}
     - target: {fileID: 8259405428061326121, guid: 3006f442da1453e489fcc1885e437dad,
         type: 3}
       propertyPath: m_LocalRotation.w
