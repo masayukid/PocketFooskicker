@@ -29,6 +29,11 @@ public class RodController : MonoBehaviour
         return _inputHandler;
     }
 
+    public Doll[] GetDolls()
+    {
+        return _dolls;
+    }
+
     void Awake()
     {
         _rodRigidbody = _rodTransform.GetComponent<Rigidbody>();

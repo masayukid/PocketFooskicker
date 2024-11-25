@@ -78,19 +78,26 @@ public class GameController : MonoBehaviour
 
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
         var ballTransform = _ballPrefab.transform;
-        var settings = _cpuConfig.GetSettingsByName(_cpuModeName);
-
+        if (!System.Enum.TryParse(_cpuModeName, out CPUMode cpuMode))
+        {
+            return;
+        }
+        var settings = _cpuConfig.GetSettingsByName(cpuMode);
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
         {
-            var dolls = rod.GetComponentsInChildren<Doll>();
             return new CPURodInputHandler(
-                ballTransform,
-                rod.transform,
-                dolls,
-                settings.moveSpeed,
-                settings.rotationSpeed
+                _currentBall,
+                rod
             ) as IRodInputHandler;
         }).ToArray();
+
+        foreach (var handler in cpuInputHandlers)
+        {
+            if (handler is CPURodInputHandler cpuHandler)
+            {
+                cpuHandler.ApplyCPUSettings(settings);
+            }
+        }
 
         _selfPlayer = new SelfPlayer(
             _selfPlayerColor,
@@ -136,18 +143,17 @@ public class GameController : MonoBehaviour
         _currentBall = ballObject.GetComponent<Ball>();
         _currentBall.OnTouch += OnTouchBall;
         _isKickedOff = false;
-        UpdateCPUHandlers(_currentBall.transform);
+        UpdateCPUHandlers(_currentBall);
     }
 
-    private void UpdateCPUHandlers(Transform newBallTransform)
+    private void UpdateCPUHandlers(Ball newBall)
     {
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
         foreach (var rodController in opponentRodControllers)
         {
             if (rodController.GetInputHandler() is CPURodInputHandler cpuHandler)
             {
-                cpuHandler.UpdateBallTransform(newBallTransform);
-                Debug.Log($"Updated Ball Transform for Rod: {rodController.name}");
+                cpuHandler.UpdateBallTransform(newBall);
             }
         }
     }
