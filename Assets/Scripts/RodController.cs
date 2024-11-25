@@ -3,8 +3,8 @@
 public class RodController : MonoBehaviour
 {
     private const float MOVE_RANGE = 1.35f; // 可動範囲
-    private const float TOP_WALL_GAP = 2.0f; // 上の壁との隙間
-    private const float BOTTOM_WALL_GAP = 2.0f; //　下の壁との隙間
+    private const float TOP_WALL_GAP = 2.0f; // 一番上のdollと上の壁との隙間
+    private const float BOTTOM_WALL_GAP = 2.0f; //　一番下のdollと下の壁との隙間
 
     [SerializeField] private Transform _rodTransform;
     [SerializeField] private GameObject _dollsObject;
