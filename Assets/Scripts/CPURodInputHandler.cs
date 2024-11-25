@@ -52,7 +52,7 @@ public class CPURodInputHandler : IRodInputHandler
 
         foreach (var doll in _dolls)
         {
-            float distance = Vector3.Distance(doll.transform.position, _ball.transform.position);
+            float distance = Vector3.Distance(doll.transform.position, _ball.GetPosition());
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -67,13 +67,13 @@ public class CPURodInputHandler : IRodInputHandler
     {
         if (nearestDoll == null) return false;
 
-        float xDistance = Mathf.Abs(nearestDoll.transform.position.x - _ball.transform.position.x);
+        float xDistance = Mathf.Abs(nearestDoll.transform.position.x - _ball.GetPosition().x);
         return xDistance <= REACTION_DISTANCE;
     }
 
     private float CalculateMovementDelta(Doll nearestDoll)
     {
-        float targetZ = _ball.transform.position.z;
+        float targetZ = _ball.GetPosition().z;
         float currentZ = _rodController.transform.position.z;
         float desiredRodZ = currentZ + (targetZ - nearestDoll.transform.position.z);
 
@@ -82,7 +82,7 @@ public class CPURodInputHandler : IRodInputHandler
     
     private float CalculateRotationDelta(Doll nearestDoll)
     {
-        Vector3 direction = _ball.transform.position - nearestDoll.transform.position;
+        Vector3 direction = _ball.GetPosition() - nearestDoll.transform.position;
         float targetAngle = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
         float currentAngle = _rodController.transform.eulerAngles.z;
 
