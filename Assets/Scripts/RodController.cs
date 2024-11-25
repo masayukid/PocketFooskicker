@@ -44,6 +44,16 @@ public class RodController : MonoBehaviour
         return _dolls;
     }
 
+    public float GetPositionZ()
+    {
+        return _rodTransform.position.z;
+    }
+
+    public float GetRotationZ()
+    {
+        return _rodTransform.eulerAngles.z;
+    }
+
     private void InitializeComponents()
     {
         _rodRigidbody = _rodTransform.GetComponent<Rigidbody>();
@@ -52,18 +62,18 @@ public class RodController : MonoBehaviour
 
     private void HandleMovement()
     {
-        MovePosition(_rodTransform.position.z + _inputHandler.GetMovementDelta());
-        MoveRotation(_rodTransform.eulerAngles.z + _inputHandler.GetRotationDelta());
+        MovePositionZ(_rodTransform.position.z + _inputHandler.GetMovementDelta());
+        MoveRotationZ(_rodTransform.eulerAngles.z + _inputHandler.GetRotationDelta());
     }
 
-    private void MovePosition(float z)
+    private void MovePositionZ(float z)
     {
         var newPosition = _rodTransform.position;
         newPosition.z = Mathf.Clamp(z, -MOVE_RANGE, MOVE_RANGE);
         _rodRigidbody.MovePosition(newPosition);
     }
 
-    private void MoveRotation(float z)
+    private void MoveRotationZ(float z)
     {
         var newRotation = _rodTransform.eulerAngles;
         newRotation.z = z;

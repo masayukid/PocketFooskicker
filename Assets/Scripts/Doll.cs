@@ -10,4 +10,9 @@ public class Doll : MonoBehaviour
         _headRenderer.material.color = color;
         _bodyRenderer.material.color = color;
     }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
 }

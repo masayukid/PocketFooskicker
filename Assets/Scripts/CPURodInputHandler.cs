@@ -60,7 +60,7 @@ public class CPURodInputHandler : IRodInputHandler
 
         foreach (var doll in _dolls)
         {
-            float distance = Vector3.Distance(doll.transform.position, _ball.GetPosition());
+            float distance = Vector3.Distance(doll.GetPosition(), _ball.GetPosition());
 
             if (distance < minDistance)
             {
@@ -79,24 +79,24 @@ public class CPURodInputHandler : IRodInputHandler
             return false;
         }
 
-        float xDistance = Mathf.Abs(nearestDoll.transform.position.x - _ball.GetPosition().x);
+        float xDistance = Mathf.Abs(nearestDoll.GetPosition().x - _ball.GetPosition().x);
         return xDistance <= REACTION_DISTANCE;
     }
 
     private float CalculateMovementDelta(Doll nearestDoll)
     {
         float targetZ = _ball.GetPosition().z;
-        float currentZ = _rodController.transform.position.z;
-        float desiredRodZ = currentZ + (targetZ - nearestDoll.transform.position.z);
+        float currentZ = _rodController.GetPositionZ();
+        float desiredRodZ = currentZ + (targetZ - nearestDoll.GetPosition().z);
 
         return Mathf.MoveTowards(currentZ, desiredRodZ, _moveSpeed * Time.fixedDeltaTime) - currentZ;
     }
     
     private float CalculateRotationDelta(Doll nearestDoll)
     {
-        Vector3 direction = _ball.GetPosition() - nearestDoll.transform.position;
+        Vector3 direction = _ball.GetPosition() - nearestDoll.GetPosition();
         float targetAngle = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
-        float currentAngle = _rodController.transform.eulerAngles.z;
+        float currentAngle = _rodController.GetRotationZ();
 
         return Mathf.Sign(Mathf.DeltaAngle(currentAngle, targetAngle)) * _rotationSpeed * Time.fixedDeltaTime;
     }
