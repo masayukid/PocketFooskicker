@@ -24,13 +24,9 @@ public class GameController : MonoBehaviour
     private bool _isSelfTurn;
     private bool _isKickedOff;
 
-    void Awake()
-    {
-        Initialize();
-    }
-
     void Start()
     {
+        Initialize();
         SpawnBall(_isSelfTurn);
     }
 
