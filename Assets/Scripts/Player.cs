@@ -3,14 +3,16 @@
 public abstract class Player
 {
     public abstract bool IsSelf { get; }
-    private readonly ScorePanel _scorePanel;
+    private readonly ScoreBoard _scoreBoard;
     private Score _score;
 
-    public Player(Color color, RodController[] rodControllers, ScorePanel scorePanel)
+    public Player(Color color, RodController[] rodControllers, ScoreBoard scoreBoard)
     {
-        _scorePanel = scorePanel;
         _score = Score.Zero();
-        _scorePanel.DisplayScore(_score);
+        
+        _scoreBoard = scoreBoard;
+        _scoreBoard.SetColor(color);
+        _scoreBoard.DisplayScore(_score);
         
         foreach (var rodController in rodControllers)
         {
@@ -21,6 +23,6 @@ public abstract class Player
     public void AddScore()
     {
         _score = _score.Incremented();
-        _scorePanel.DisplayScore(_score);
+        _scoreBoard.DisplayScore(_score);
     }
 }

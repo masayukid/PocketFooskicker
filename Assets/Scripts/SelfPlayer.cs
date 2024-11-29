@@ -5,7 +5,7 @@ public class SelfPlayer : Player
 {
     public override bool IsSelf => true;
 
-    public SelfPlayer(Color color, RodController[] rodControllers, ScorePanel scorePanel, IRodInputHandler[] inputHandlers) : base(color, rodControllers, scorePanel)
+    public SelfPlayer(Color color, RodController[] rodControllers, ScoreBoard scoreBoard, IRodInputHandler[] inputHandlers) : base(color, rodControllers, scoreBoard)
     {
         Assert.IsTrue(rodControllers.Length == inputHandlers.Length);
 
