@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44300658, g: 0.4921953, b: 0.57192475, a: 1}
+  m_IndirectSpecularColor: {r: 0.44300613, g: 0.49219495, b: 0.5719239, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -739,7 +739,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1672812253}
+  - {fileID: 987515985}
   - {fileID: 695893969}
   m_Father: {fileID: 262355355}
   m_RootOrder: 5
@@ -1517,6 +1517,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 80, y: 0, z: 0}
+--- !u!4 &987515985 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8210114976673585376, guid: 36243177c9fc7fa4dba5682ef88af173,
+    type: 3}
+  m_PrefabInstance: {fileID: 1730880639}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &993899701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3276713133471337902, guid: 3006f442da1453e489fcc1885e437dad,
@@ -2131,7 +2137,7 @@ MonoBehaviour:
   _opponentPlayerColor: {r: 0.7924528, g: 0, b: 0.034529846, a: 1}
   _selfPlayerSet: {fileID: 905073166}
   _opponentPlayerSet: {fileID: 169866953}
-  _selfScoreBoard: {fileID: 1824578835}
+  _selfScoreBoard: {fileID: 1730880641}
   _opponentScoreBoard: {fileID: 695893970}
   _controlAreas: {fileID: 116688808}
   _selfGoal: {fileID: 841779183}
@@ -2444,11 +2450,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 36243177c9fc7fa4dba5682ef88af173, type: 3}
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8210114976673585376, guid: 36243177c9fc7fa4dba5682ef88af173,
-    type: 3}
-  m_PrefabInstance: {fileID: 1730880639}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1730880641 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1247176439384468585, guid: 36243177c9fc7fa4dba5682ef88af173,
@@ -2700,18 +2701,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820585234}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1824578835 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1247176439384468585, guid: 36243177c9fc7fa4dba5682ef88af173,
-    type: 3}
-  m_PrefabInstance: {fileID: 1672812252}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d35851d768d7fdf4eaa201ef13eb372d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1836677907
 PrefabInstance:
   m_ObjectHideFlags: 0
