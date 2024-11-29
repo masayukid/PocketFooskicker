@@ -13,8 +13,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private Color _opponentPlayerColor;
     [SerializeField] private GameObject _selfPlayerSet;
     [SerializeField] private GameObject _opponentPlayerSet;
-    [SerializeField] private ScorePanel _selfScorePanel;
-    [SerializeField] private ScorePanel _opponentScorePanel;
+    [SerializeField] private ScoreBoard _selfScoreBoard;
+    [SerializeField] private ScoreBoard _opponentScoreBoard;
     [SerializeField] private GameObject _controlAreas;
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
@@ -31,13 +31,9 @@ public class GameController : MonoBehaviour
     private bool _isSelfTurn;
     private bool _isKickedOff;
 
-    void Awake()
-    {
-        Initialize();
-    }
-
     void Start()
     {
+        Initialize();
         SpawnBall(_isSelfTurn);
     }
 
@@ -76,14 +72,14 @@ public class GameController : MonoBehaviour
         _selfPlayer = new SelfPlayer(
             _selfPlayerColor,
             selfRodControllers,
-            _selfScorePanel,
+            _selfScoreBoard,
             inputHandlers
         );
 
         _opponentPlayer = new OpponentPlayer(
             _opponentPlayerColor,
             opponentRodControllers,
-            _opponentScorePanel,
+            _opponentScoreBoard,
             cpuInputHandlers
         );
     }
@@ -109,9 +105,9 @@ public class GameController : MonoBehaviour
             Destroy(_currentBall.gameObject);
         }
 
-        GameObject ballObject = Instantiate(_ballPrefab);
         float offsetX = isSelf ? _ballInitialOffset.x : -_ballInitialOffset.x;
-        ballObject.transform.position = new Vector3(offsetX, _ballInitialOffset.y, 0);
+        var ballPosition = new Vector3(offsetX, _ballInitialOffset.y, 0);
+        GameObject ballObject = Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
 
         _currentBall = ballObject.GetComponent<Ball>();
         _currentBall.OnTouch += OnTouchBall;
