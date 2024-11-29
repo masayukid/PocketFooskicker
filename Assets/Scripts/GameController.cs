@@ -9,8 +9,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private Color _opponentPlayerColor;
     [SerializeField] private GameObject _selfPlayerSet;
     [SerializeField] private GameObject _opponentPlayerSet;
-    [SerializeField] private ScorePanel _selfScorePanel;
-    [SerializeField] private ScorePanel _opponentScorePanel;
+    [SerializeField] private ScoreBoard _selfScoreBoard;
+    [SerializeField] private ScoreBoard _opponentScoreBoard;
     [SerializeField] private GameObject _controlAreas;
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
@@ -64,14 +64,14 @@ public class GameController : MonoBehaviour
         _selfPlayer = new SelfPlayer(
             _selfPlayerColor,
             selfRodControllers,
-            _selfScorePanel,
+            _selfScoreBoard,
             inputHandlers
         );
 
         _opponentPlayer = new OpponentPlayer(
             _opponentPlayerColor,
             opponentRodControllers,
-            _opponentScorePanel
+            _opponentScoreBoard
         );
         
         _currentBall = null;
