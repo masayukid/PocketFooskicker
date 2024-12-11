@@ -105,9 +105,9 @@ public class GameController : MonoBehaviour
             Destroy(_currentBall.gameObject);
         }
 
-        GameObject ballObject = Instantiate(_ballPrefab);
         float offsetX = isSelf ? _ballInitialOffset.x : -_ballInitialOffset.x;
-        ballObject.transform.position = new Vector3(offsetX, _ballInitialOffset.y, 0);
+        var ballPosition = new Vector3(offsetX, _ballInitialOffset.y, 0);
+        GameObject ballObject = Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
 
         _currentBall = ballObject.GetComponent<Ball>();
         _currentBall.OnTouch += OnTouchBall;
