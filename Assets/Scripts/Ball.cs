@@ -17,6 +17,11 @@ public class Ball : MonoBehaviour
         OnTouch?.Invoke();
     }
 
+    public void Inactivate()
+    {
+        gameObject.SetActive(false);
+    }
+
     public float GetCurrentSpeed()
     {
         return _rigidbody.velocity.magnitude;

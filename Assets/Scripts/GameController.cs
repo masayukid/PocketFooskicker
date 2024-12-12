@@ -18,14 +18,15 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject _controlAreas;
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
+    [SerializeField] private GoalPanel _goalPanel;
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
     [Header("CPU Settings")]
     [SerializeField] private CPUConfig _cpuConfig;
     [SerializeField] private CPUMode _cpuMode;
 
-    private SelfPlayer _selfPlayer;
-    private OpponentPlayer _opponentPlayer;
+    private Player _selfPlayer;
+    private Player _opponentPlayer;
     private Ball _currentBall;
     private float _respawnTimer;
     private bool _isSelfTurn;
@@ -34,7 +35,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         Initialize();
-        SpawnBall(_isSelfTurn);
+        SpawnBall();
     }
 
     void Update()
@@ -45,18 +46,20 @@ public class GameController : MonoBehaviour
     private void Initialize()
     {
         SetupPlayers();
-        SubscribeToGoals();
+        SubscribeGoalEvents();
         ResetGameState();
     }
 
     private void SetupPlayers()
     {
+        // プレイヤー設定
         var selfRodControllers = _selfPlayerSet.GetComponentsInChildren<RodController>();
         var inputHandlers = _controlAreas.GetComponentsInChildren<IRodInputHandler>();
+        SetUpRodControllers(selfRodControllers, inputHandlers);
 
+        // CPU設定
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
         var settings = _cpuConfig.GetSettingsByMode(_cpuMode);
-
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
         {
             var handler = new CPURodInputHandler(_currentBall, rod);
@@ -69,25 +72,41 @@ public class GameController : MonoBehaviour
             cpuHandler.ApplyCPUSettings(settings);
         }
 
-        _selfPlayer = new SelfPlayer(
+        SetUpRodControllers(opponentRodControllers, cpuInputHandlers);
+
+        _selfPlayer = new Player(
+            true,
             _selfPlayerColor,
             selfRodControllers,
-            _selfScoreBoard,
-            inputHandlers
+            _selfScoreBoard
         );
 
-        _opponentPlayer = new OpponentPlayer(
+        _opponentPlayer = new Player(
+            false,
             _opponentPlayerColor,
             opponentRodControllers,
-            _opponentScoreBoard,
-            cpuInputHandlers
+            _opponentScoreBoard
         );
     }
 
-    private void SubscribeToGoals()
+    private void SetUpRodControllers(RodController[] rodControllers, IRodInputHandler[] inputHandlers)
+    {
+        if (rodControllers.Length != inputHandlers.Length)
+        {
+            throw new Exception("RodControllerとInputHandlerの要素数が異なります。");
+        }
+
+        for (int i = 0; i < rodControllers.Length; i++)
+        {
+            rodControllers[i].RegisterHandler(inputHandlers[i]);
+        }
+    }
+
+    private void SubscribeGoalEvents()
     {
         _selfGoal.OnGoal += OnGoal;
         _opponentGoal.OnGoal += OnGoal;
+        _goalPanel.OnClose += SpawnBall;
     }
 
     private void ResetGameState()
@@ -98,14 +117,14 @@ public class GameController : MonoBehaviour
         _isKickedOff = false;
     }
 
-    private void SpawnBall(bool isSelf)
+    private void SpawnBall()
     {
         if (_currentBall != null)
         {
             Destroy(_currentBall.gameObject);
         }
 
-        float offsetX = isSelf ? _ballInitialOffset.x : -_ballInitialOffset.x;
+        float offsetX = _isSelfTurn ? _ballInitialOffset.x : -_ballInitialOffset.x;
         var ballPosition = new Vector3(offsetX, _ballInitialOffset.y, 0);
         GameObject ballObject = Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
 
@@ -114,6 +133,9 @@ public class GameController : MonoBehaviour
         _isKickedOff = false;
 
         OnSpawnBall?.Invoke(_currentBall);
+
+        _selfPlayer.ReturnRodControl();
+        _opponentPlayer.ReturnRodControl();
     }
 
     private void HandleBallRespawn()
@@ -133,23 +155,21 @@ public class GameController : MonoBehaviour
 
         if (_respawnTimer > BALL_RESPAWN_TIMEOUT)
         {
-            SpawnBall(_isSelfTurn);
+            SpawnBall();
         }
     }
 
     private void OnGoal(Goal goal)
     {
-        if (goal.IsSelf)
-        {
-            _opponentPlayer.AddScore();
-        }
-        else
-        {
-            _selfPlayer.AddScore();
-        }
+        _currentBall.Inactivate();
 
-        _isSelfTurn = goal.IsSelf;
-        SpawnBall(_isSelfTurn);
+        Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
+        goalPlayer.AddScore();
+        _isSelfTurn = !goalPlayer.IsSelf;
+        _goalPanel.Open(goalPlayer.Color);
+
+        _selfPlayer.SeizeRodControlAndReset();
+        _opponentPlayer.SeizeRodControlAndReset();
     }
 
     private void OnTouchBall()

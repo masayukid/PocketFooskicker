@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class RodController : MonoBehaviour
 {
+    private const float RESET_DURATION = 1.0f;
     private const float MOVE_RANGE = 1.35f; // 可動範囲
 
     [SerializeField] private Transform _topBushing;
@@ -14,6 +16,7 @@ public class RodController : MonoBehaviour
     private IRodInputHandler _inputHandler;
     private float _topBushingDistance;    // 上部のDollとBushingの距離
     private float _bottomBushingDistance; // 下部のDollとBushingの距離
+    private bool _isControllable;
 
     void Awake()
     {
@@ -23,7 +26,7 @@ public class RodController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (_inputHandler == null || _rodRigidbody == null)
+        if (_inputHandler == null || _rodRigidbody == null || !_isControllable)
         {
             return;
         }
@@ -41,6 +44,22 @@ public class RodController : MonoBehaviour
         foreach (var doll in _dolls)
         {
             doll.SetColor(color);
+        }
+    }
+
+    public void ResetPositionAndRotation()
+    {
+        StartCoroutine(ResetPositionAndRotationSmoothly());
+    }
+
+    public void SetIsControllable(bool isControllable)
+    {
+        _isControllable = isControllable;
+
+        if (isControllable)
+        {
+            _inputHandler.GetMovementDelta();
+            _inputHandler.GetRotationDelta();
         }
     }
 
@@ -105,5 +124,31 @@ public class RodController : MonoBehaviour
         var newRotation = _rodTransform.eulerAngles;
         newRotation.z = z;
         _rodRigidbody.MoveRotation(Quaternion.Euler(newRotation));
+    }
+
+    private IEnumerator ResetPositionAndRotationSmoothly()
+    {
+        Vector3 startPosition = _rodTransform.position;
+        Quaternion startRotation = _rodTransform.rotation;
+        Vector3 eulerRotation = startRotation.eulerAngles;
+
+        Vector3 targetPosition = new Vector3(startPosition.x, startPosition.y, 0);
+        Quaternion targetRotation = Quaternion.Euler(eulerRotation.x, eulerRotation.y, 0);
+
+        float timer = 0;
+
+        while (timer < RESET_DURATION)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.Clamp01(timer / RESET_DURATION);
+            float tCubic = Mathf.Pow(t - 1, 3) + 1;     // 三次関数で滑らかに補完
+            _rodTransform.position = Vector3.Lerp(startPosition, targetPosition, tCubic);
+            _rodTransform.rotation = Quaternion.Lerp(startRotation, targetRotation, tCubic);
+
+            yield return null;
+        }
+
+        _rodTransform.position = targetPosition;
+        _rodTransform.rotation = targetRotation;
     }
 }
