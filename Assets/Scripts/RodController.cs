@@ -5,9 +5,7 @@ public class RodController : MonoBehaviour
 {
     private const float RESET_DURATION = 1.0f;
     private const float MOVE_RANGE = 1.35f; // 可動範囲
-    private const float ROTATION_SPEED = 1000f;
 
-    [SerializeField] private bool isPlayerControlled = false;
     [SerializeField] private Transform _topBushing;
     [SerializeField] private Transform _bottomBushing;
     [SerializeField] private Transform _rodTransform;
@@ -24,11 +22,6 @@ public class RodController : MonoBehaviour
     {
         InitializeComponents();
         InitializeDollMoveRanges();
-
-        if (isPlayerControlled)
-        {
-            Input.gyro.enabled = true; 
-        }
     }
 
     void FixedUpdate()
@@ -38,14 +31,7 @@ public class RodController : MonoBehaviour
             return;
         }
 
-        if (isPlayerControlled)
-        {
-            HandlePlayerMovement();
-        }
-        else
-        {
-            HandleMovement();
-        }
+        HandleMovement();
     }
 
     public void RegisterHandler(IRodInputHandler inputHandler)
@@ -138,55 +124,6 @@ public class RodController : MonoBehaviour
         var newRotation = _rodTransform.eulerAngles;
         newRotation.z = z;
         _rodRigidbody.MoveRotation(Quaternion.Euler(newRotation));
-    }
-
-    private void HandlePlayerMovement()
-    {
-        Quaternion gyroAttitude = Input.gyro.attitude;
-
-        Vector3 acceleration = Input.acceleration;
-        float horizontal = acceleration.x;
-        Vector3 gyroEulerAngles = gyroAttitude.eulerAngles;
-        float verticalPosition = Mathf.Clamp(ConvertGyroToRodPosition(gyroEulerAngles.x), -MOVE_RANGE, MOVE_RANGE);
-
-        MovePositionZ_direct(verticalPosition);
-        RotateRod(horizontal);
-    }
-
-    private float ConvertGyroToRodPosition(float gyroX)
-    {
-        if (gyroX > 180) gyroX -= 360;
-        float normalized = Mathf.Clamp(gyroX / 90f, -1f, 1f);
-
-        return normalized * MOVE_RANGE;
-    }
-
-    private void MovePositionZ_direct(float targetZ)
-    {
-
-        Vector3 newPosition = _rodTransform.position;
-        newPosition.z = targetZ;
-
-        Debug.Log($"Moving Rod to Z={newPosition.z}");
-
-        _rodRigidbody.MovePosition(newPosition);
-    }
-
-    private void RotateRod(float horizontal)
-    {
-        if (Mathf.Abs(horizontal) < 0.3f) return; 
-
-        Vector3 newRotation = _rodTransform.eulerAngles;
-        float currentZ = newRotation.z;
-        if (currentZ > 180) currentZ -= 360;
-
-        currentZ -= horizontal * ROTATION_SPEED * Time.deltaTime;
-        currentZ = Mathf.Clamp(currentZ, -180f, 180f);
-
-        newRotation.z = currentZ;
-        _rodRigidbody.MoveRotation(Quaternion.Euler(newRotation));
-
-        Debug.Log($"Rotating Rod: Z={currentZ} with horizontal={horizontal}");
     }
 
     private IEnumerator ResetPositionAndRotationSmoothly()
