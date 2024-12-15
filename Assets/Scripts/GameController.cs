@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Vector2 _ballInitialOffset;
     [Header("CPU Settings")]
     [SerializeField] private CPUConfig _cpuConfig;
-    [SerializeField] private CPUMode _cpuMode;
+    [SerializeField] private CPUMode _defaultCPUMode;
 
     private Player _selfPlayer;
     private Player _opponentPlayer;
@@ -58,8 +58,10 @@ public class GameController : MonoBehaviour
         SetUpRodControllers(selfRodControllers, inputHandlers);
 
         // CPU設定
+        var cpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
+        var settings = _cpuConfig.GetSettingsByMode(cpuMode);
+
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
-        var settings = _cpuConfig.GetSettingsByMode(_cpuMode);
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
         {
             var handler = new CPURodInputHandler(_currentBall, rod);
