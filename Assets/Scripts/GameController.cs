@@ -36,7 +36,6 @@ public class GameController : MonoBehaviour
     {
         Initialize();
         SpawnBall();
-        Input.gyro.enabled = true;
     }
 
     void Update()
@@ -55,14 +54,25 @@ public class GameController : MonoBehaviour
     {
         // プレイヤー設定
         var selfRodControllers = _selfPlayerSet.GetComponentsInChildren<RodController>();
-        var gyroHandlers = selfRodControllers.Select(rod =>
+        IRodInputHandler[] inputHandlers;
+        
+        if (SystemInfo.supportsGyroscope)
         {
-            var handler = new GyroRodInputHandler(_currentBall, rod);
-            OnSpawnBall += handler.UpdateBallReference;
-            return handler;
-        }).ToArray();
+            // デバイスがジャイロに対応している場合
+            Input.gyro.enabled = true;
+            inputHandlers = selfRodControllers.Select(rod =>
+            {
+                var handler = new GyroRodInputHandler(_currentBall, rod);
+                OnSpawnBall += handler.UpdateBallReference;
+                return handler;
+            }).ToArray();
+        }
+        else
+        {
+            inputHandlers = _controlAreas.GetComponentsInChildren<IRodInputHandler>();
+        }
 
-        SetUpRodControllers(selfRodControllers, gyroHandlers);
+        SetUpRodControllers(selfRodControllers, inputHandlers);
 
         // CPU設定
         var cpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
