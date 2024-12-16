@@ -5,6 +5,7 @@ public class GyroRodInputHandler : IRodInputHandler
     private const float REACTION_DISTANCE = 1.6f; // ボールに反応する最大距離
     private const float GYRO_SENSITIVITY = 1.0f; // ジャイロ感度
     private const float ACCELERATION_SENSITIVITY = 1000f; // 加速度センサ感度
+    private const float MIN_ACCELERATION_THRESH = 0.3f;
 
     private Ball _ball;
     private readonly Doll[] _dolls;
@@ -101,7 +102,7 @@ public class GyroRodInputHandler : IRodInputHandler
         Vector3 acceleration = Input.acceleration;
         float horizontal = acceleration.x;
 
-        if (Mathf.Abs(horizontal) < 0.3f)
+        if (Mathf.Abs(horizontal) < MIN_ACCELERATION_THRESH)
         {
             return 0f;
         }
