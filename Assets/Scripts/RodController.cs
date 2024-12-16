@@ -65,10 +65,6 @@ public class RodController : MonoBehaviour
 
     public Doll[] GetDolls()
     {
-        if (_dolls == null || _dolls.Length == 0)
-        {
-            Debug.LogError("Dolls are not properly initialized in RodController.");
-        }
         return _dolls;
     }
 
