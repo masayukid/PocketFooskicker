@@ -84,11 +84,15 @@ public class GyroRodInputHandler : IRodInputHandler
     private float GetGyroMovement()
     {
         // ジャイロセンサーの傾きを取得
-        Vector3 tiltZ = Input.gyro.attitude.eulerAngles; 
-        if (tiltZ.x > 180) tiltZ.x -= 360;
-        float normalized = Mathf.Clamp(tiltZ.x / 90f, -1f, 1f);
+        Vector3 tiltZ = Input.gyro.attitude.eulerAngles;
 
-        float movement = - normalized * GYRO_SENSITIVITY; 
+        if (tiltZ.x > 180)
+        {
+            tiltZ.x -= 360;
+        }
+
+        float normalized = Mathf.Clamp(tiltZ.x / 90f, -1f, 1f);
+        float movement = -normalized * GYRO_SENSITIVITY; 
         return movement;
     }
 
@@ -96,8 +100,12 @@ public class GyroRodInputHandler : IRodInputHandler
     {
         Vector3 acceleration = Input.acceleration;
         float horizontal = acceleration.x;
+
         if (Mathf.Abs(horizontal) < 0.3f)
+        {
             return 0f;
+        }
+
         float rotationDelta = -acceleration.x * ACCELERATION_SENSITIVITY; 
         return rotationDelta * Time.fixedDeltaTime; 
     }
