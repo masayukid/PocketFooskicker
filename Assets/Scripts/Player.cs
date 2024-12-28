@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Player
+public class Player : IPlayerInfo
 {
     public bool IsSelf { get; }
     public Color Color { get; }
@@ -21,7 +21,7 @@ public class Player
 
         foreach (var rodController in rodControllers)
         {
-            rodController.SetColor(color);
+            rodController.SetOwnerInfo(this);
         }
     }
 
