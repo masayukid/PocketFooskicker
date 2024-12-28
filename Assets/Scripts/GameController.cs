@@ -6,8 +6,9 @@ public class GameController : MonoBehaviour
 {
     public event Action<Ball> OnSpawnBall;
 
-    private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
-    private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
+    private const float BALL_RESPAWN_SPEED = 0.05f;         // ボールを再生成する下限速度
+    private const float BALL_RESPAWN_TIMEOUT = 3.0f;        // ボールが下限速度を何秒間下回ったら再生成するか
+    private const float VIBRATION_IMPULSE_THRESH = 10.0f;   // バイブレーションを起こす衝撃の閾値
 
     [SerializeField] private Color _selfPlayerColor;
     [SerializeField] private Color _opponentPlayerColor;
@@ -191,7 +192,7 @@ public class GameController : MonoBehaviour
         _opponentPlayer.SeizeRodControlAndReset();
     }
 
-    private void OnTouchBall()
+    private void OnTouchBall(Collision collision)
     {
         if (!_isKickedOff)
         {
@@ -199,6 +200,16 @@ public class GameController : MonoBehaviour
         }
 
         ResetRespawnTimer();
+        
+        if (collision.impulse.magnitude > VIBRATION_IMPULSE_THRESH)
+        {
+            var rodController = collision.gameObject.GetComponentInParent<RodController>();
+
+            if (rodController.OwnerInfo.IsSelf)
+            {
+                VibrationManager.ShortVibration();
+            }
+        }
     }
 
     private void ResetRespawnTimer()

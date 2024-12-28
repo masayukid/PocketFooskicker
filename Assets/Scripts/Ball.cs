@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public event Action OnTouch;
+    public event Action<Collision> OnTouch;
 
     private Rigidbody _rigidbody;
 
@@ -14,7 +14,10 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        OnTouch?.Invoke();
+        if (other.gameObject.CompareTag("Rod"))
+        {
+            OnTouch?.Invoke(other);
+        }
     }
 
     public void Inactivate()
