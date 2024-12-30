@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 1118141229}
   - component: {fileID: 1118141230}
   m_Layer: 0
-  m_Name: Buttons
+  m_Name: ResultButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -605,9 +605,10 @@ Animation:
   m_GameObject: {fileID: 1118141228}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 4405fd18aed1d1346bdb6232426cb2f2, type: 2}
+  m_Animation: {fileID: 7400000, guid: 20af4169f86c5490a995aedc36044a29, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: 4405fd18aed1d1346bdb6232426cb2f2, type: 2}
+  - {fileID: 7400000, guid: 20af4169f86c5490a995aedc36044a29, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -709,7 +710,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

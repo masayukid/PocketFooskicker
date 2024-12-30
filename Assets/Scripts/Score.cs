@@ -20,7 +20,7 @@ public class Score
 
     public bool IsWinningScore()
     {
-        return _value >= 1;
+        return _value >= 3;
     }
 
     public override string ToString()
