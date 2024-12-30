@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
@@ -184,6 +185,15 @@ public class GameController : MonoBehaviour
 
         Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
         goalPlayer.AddScore();
+
+        if (goalPlayer.IsSelf && _selfPlayer.Score.IsWinningScore())
+        {
+            EndGame(_selfPlayer);
+            return;
+        } else if (!goalPlayer.IsSelf && _opponentPlayer.Score.IsWinningScore()) {
+            EndGame(_opponentPlayer);
+            return;
+        }
         _isSelfTurn = !goalPlayer.IsSelf;
         _goalPanel.Open(goalPlayer.Color);
 
@@ -199,6 +209,17 @@ public class GameController : MonoBehaviour
         }
 
         ResetRespawnTimer();
+    }
+
+    private void EndGame(Player winner)
+    {
+        var resultData = new Dictionary<string, object>
+        {
+            { "PlayerScore", _selfPlayer.Score.Value },
+            { "OpponentScore", _opponentPlayer.Score.Value },
+            { "IsSelfWinner", winner.IsSelf }
+        };
+        TransitionManager.Instance.TransitionTo("Result", resultData);
     }
 
     private void ResetRespawnTimer()

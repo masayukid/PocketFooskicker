@@ -18,6 +18,11 @@ public class Score
         return new Score(0);
     }
 
+    public bool IsWinningScore()
+    {
+        return _value >= 1;
+    }
+
     public override string ToString()
     {
         return _value.ToString();

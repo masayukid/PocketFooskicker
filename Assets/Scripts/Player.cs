@@ -8,6 +8,8 @@ public class Player
     private readonly ScoreBoard _scoreBoard;
     private Score _score;
 
+    public Score Score => _score;
+
     public Player(bool isSelf, Color color, RodController[] rodControllers, ScoreBoard scoreBoard)
     {
         IsSelf = isSelf;
