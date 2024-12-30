@@ -593,7 +593,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!111 &1118141230
@@ -625,7 +625,7 @@ GameObject:
   - component: {fileID: 1154186361}
   - component: {fileID: 1154186362}
   m_Layer: 5
-  m_Name: scoreText
+  m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -942,6 +942,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1154186362}
   resultMessage: {fileID: 181510070}
+  victoryParticlePrefab: {fileID: 4988485410404902702, guid: 1db5829a5db644171a93884167f6fa5b,
+    type: 3}
+  canvas: {fileID: 1894433566}
 --- !u!4 &1767562838
 Transform:
   m_ObjectHideFlags: 0
