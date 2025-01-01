@@ -44,7 +44,6 @@ public class RodController : MonoBehaviour
         if (_inputHandler is GyroRodInputHandler gyroHandler)
         {
             gyroHandler.SetSensitivity(movementSensitivity, rotationSensitivity);
-            Debug.Log($"RodController: 感度を更新しました - 移動感度 = {movementSensitivity}, 回転感度 = {rotationSensitivity}");
         }
     }
 

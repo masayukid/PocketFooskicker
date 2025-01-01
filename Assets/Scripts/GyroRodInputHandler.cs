@@ -4,7 +4,7 @@ public class GyroRodInputHandler : IRodInputHandler
 {
     private const float REACTION_DISTANCE = 1.6f; // ボールに反応する最大距離
     private float movementSensitivity = 1.0f; // 移動感度
-    private float rotationSensitivity = 1.0f; // 回転感度
+    private float rotationSensitivity = 300f; // 回転感度
     private const float MIN_ACCELERATION_THRESH = 0.3f;
 
     private Ball _ball;

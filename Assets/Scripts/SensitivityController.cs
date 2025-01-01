@@ -9,7 +9,7 @@ public class SensitivityController : MonoBehaviour
 
     [Header("Sensitivity Values")]
     public float movementSensitivity = 1.0f;
-    public float rotationSensitivity = 1.0f;
+    public float rotationSensitivity = 300f;
 
     private void Start()
     {

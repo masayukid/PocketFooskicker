@@ -15,6 +15,7 @@ public class PauseManager : MonoBehaviour
     public void PauseGame()
     {
         pauseCanvas.SetActive(true);
+        pauseMenuGroup.SetActive(true);
         sensitivitySettingsGroup.SetActive(false);
         pauseButton.SetActive(false);
         Time.timeScale = 0;
