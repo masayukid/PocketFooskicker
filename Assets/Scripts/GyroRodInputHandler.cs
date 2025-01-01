@@ -3,8 +3,8 @@ using UnityEngine;
 public class GyroRodInputHandler : IRodInputHandler
 {
     private const float REACTION_DISTANCE = 1.6f; // ボールに反応する最大距離
-    private const float GYRO_SENSITIVITY = 1.0f; // ジャイロ感度
-    private const float ACCELERATION_SENSITIVITY = 1000f; // 加速度センサ感度
+    private float movementSensitivity = 1.0f; // 移動感度
+    private float rotationSensitivity = 1.0f; // 回転感度
     private const float MIN_ACCELERATION_THRESH = 0.3f;
 
     private Ball _ball;
@@ -14,6 +14,12 @@ public class GyroRodInputHandler : IRodInputHandler
     {
         _ball = ball;
         _dolls = rodController.GetDolls();
+    }
+
+    public void SetSensitivity(float movement, float rotation)
+    {
+        movementSensitivity = movement;
+        rotationSensitivity = rotation;
     }
 
     public void UpdateBallReference(Ball newBall)
@@ -93,21 +99,22 @@ public class GyroRodInputHandler : IRodInputHandler
         }
 
         float normalized = Mathf.Clamp(tiltZ.x / 90f, -1f, 1f);
-        float movement = -normalized * GYRO_SENSITIVITY; 
+        float movement = -normalized * movementSensitivity; 
         return movement;
     }
 
     private float GetAccelerationRotation()
     {
-        Vector3 acceleration = Input.acceleration;
-        float horizontal = acceleration.x;
+        // ジャイロセンサーの角速度（回転速度）を取得
+        Vector3 angularVelocity = Input.gyro.rotationRate;
 
-        if (Mathf.Abs(horizontal) < MIN_ACCELERATION_THRESH)
-        {
-            return 0f;
-        }
+        // 水平方向の回転速度（ジャイロのY軸）を抽出
+        float rotationRate = angularVelocity.y;
 
-        float rotationDelta = -acceleration.x * ACCELERATION_SENSITIVITY; 
-        return rotationDelta * Time.fixedDeltaTime; 
+        // 回転速度を基に回転量を計算
+        float rotationDelta = rotationRate * rotationSensitivity; // 感度を利用して調整
+
+        // フレームレートに依存しないスムーズな回転を実現
+        return rotationDelta * Time.fixedDeltaTime;
     }
 }
