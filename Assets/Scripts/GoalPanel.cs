@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GoalPanel : MonoBehaviour
 {
     [SerializeField] private Image _textImage;
-    private event Action _onClose;
+    private Action _onClose;
     private Animation _animation;
 
     void Awake()
