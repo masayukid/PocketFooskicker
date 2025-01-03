@@ -6,8 +6,6 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private AudioSource _bgmAudioSource;
     [SerializeField] private AudioSource _seTapAudioSource;
 
-    private AudioSource _audioSource;
-
     void Start()
     {
         _bgmAudioSource.Play();
