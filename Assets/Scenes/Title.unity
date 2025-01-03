@@ -391,8 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _titleAnim: {fileID: 2147412130}
-  _bgmAudioSource: {fileID: 505801233}
-  _seTapAudioSource: {fileID: 505801234}
+  _seClick: {fileID: 505801234}
 --- !u!82 &505801233
 AudioSource:
   m_ObjectHideFlags: 0

@@ -3,19 +3,13 @@
 public class TitleManager : MonoBehaviour
 {
     [SerializeField] private Animation _titleAnim;
-    [SerializeField] private AudioSource _bgmAudioSource;
-    [SerializeField] private AudioSource _seTapAudioSource;
-
-    void Start()
-    {
-        _bgmAudioSource.Play();
-    }
+    [SerializeField] private AudioSource _seClick;
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _seTapAudioSource.Play();
+            _seClick.Play();
 
             if (_titleAnim.isPlaying)
             {

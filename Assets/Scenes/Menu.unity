@@ -1036,8 +1036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f15ce84b2da52b46ae36b0396a08dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bgmAudioSource: {fileID: 1520687003}
-  _seTapAudioSource: {fileID: 1520687002}
+  _seClick: {fileID: 1520687002}
 --- !u!82 &1520687002
 AudioSource:
   m_ObjectHideFlags: 0

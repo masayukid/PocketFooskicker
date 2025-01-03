@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
-    [SerializeField] private AudioSource _bgmAudioSource;
-    [SerializeField] private AudioSource _seTapAudioSource;
+    [SerializeField] private AudioSource _seClick;
 
     public void OnSelect(string difficulty)
     {
-        _seTapAudioSource.Play();
-        
+        _seClick.Play();
+
         if (Enum.TryParse(difficulty, out CPUMode cpuMode))
         {
             var data = new Dictionary<string, object>
