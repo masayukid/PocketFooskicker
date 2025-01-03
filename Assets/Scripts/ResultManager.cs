@@ -5,33 +5,33 @@ using TMPro;
 
 public class ResultManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private TextMeshProUGUI resultMessage;
-    [SerializeField] private GameObject victoryParticlePrefab;
-    [SerializeField] private Canvas canvas;
+    [SerializeField] private TextMeshProUGUI _scoreText;
+    [SerializeField] private TextMeshProUGUI _resultMessage;
+    [SerializeField] private GameObject _victoryParticlePrefab;
+    [SerializeField] private Canvas _canvas;
 
     void Start()
     {
         int playerScore = TransitionManager.Instance.GetDataOrDefault("PlayerScore", 0);
         int opponentScore = TransitionManager.Instance.GetDataOrDefault("OpponentScore", 0);
         bool isSelfWinner = TransitionManager.Instance.GetDataOrDefault("IsSelfWinner", true);
-        scoreText.text = $"{playerScore} - {opponentScore}";
+        _scoreText.text = $"{playerScore} - {opponentScore}";
 
         if (isSelfWinner)
         {
-            resultMessage.text = "You Win !";
+            _resultMessage.text = "You Win !";
             SpawnVictoryParticles();
         }
         else
         {
-            resultMessage.text = "You Lose...";
-            resultMessage.color = Color.red;
+            _resultMessage.text = "You Lose...";
+            _resultMessage.color = Color.red;
         }
     }
 
     private void SpawnVictoryParticles()
     {
-        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        RectTransform canvasRect = _canvas.GetComponent<RectTransform>();
         float canvasWidth = canvasRect.rect.width;
         float canvasHeight = canvasRect.rect.height;
         Vector2 leftPosition = new Vector2(-canvasWidth / 2, canvasHeight / 8);
@@ -43,7 +43,7 @@ public class ResultManager : MonoBehaviour
 
     private void InstantiateParticle(Vector2 anchoredPosition, Quaternion rotation)
     {
-        GameObject particleEffect = Instantiate(victoryParticlePrefab, canvas.transform);
+        GameObject particleEffect = Instantiate(_victoryParticlePrefab, _canvas.transform);
 
         RectTransform rectTransform = particleEffect.GetComponent<RectTransform>();
 
@@ -53,14 +53,6 @@ public class ResultManager : MonoBehaviour
             rectTransform.localRotation = rotation;
             rectTransform.localScale = Vector3.one;
         }
-
-        ParticleSystem ps = particleEffect.GetComponent<ParticleSystem>();
-
-        if (ps != null)
-        {
-            ps.Play();
-        }
-
         Destroy(particleEffect, 5.0f);
     }
 

@@ -940,11 +940,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427c86989a53e44938e5f78e798862d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreText: {fileID: 1154186362}
-  resultMessage: {fileID: 181510070}
-  victoryParticlePrefab: {fileID: 4988485410404902702, guid: 1db5829a5db644171a93884167f6fa5b,
+  _scoreText: {fileID: 1154186362}
+  _resultMessage: {fileID: 181510070}
+  _victoryParticlePrefab: {fileID: 4988485410404902702, guid: 1db5829a5db644171a93884167f6fa5b,
     type: 3}
-  canvas: {fileID: 1894433566}
+  _canvas: {fileID: 1894433566}
 --- !u!4 &1767562838
 Transform:
   m_ObjectHideFlags: 0
