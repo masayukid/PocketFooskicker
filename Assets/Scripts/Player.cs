@@ -33,6 +33,11 @@ public class Player
         _scoreBoard.DisplayScore(_score);
     }
 
+    public bool IsWinner()
+    {
+        return _score.IsWinningScore(_scoreBoard.MaxLamps);
+    }
+
     public void SeizeRodControlAndReset()
     {
         foreach (var rodController in _rodControllers)

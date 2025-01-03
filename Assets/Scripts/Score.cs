@@ -18,9 +18,9 @@ public class Score
         return new Score(0);
     }
 
-    public bool IsWinningScore()
+    public bool IsWinningScore(int maxLamps)
     {
-        return _value >= 3;
+        return _value >= maxLamps;
     }
 
     public override string ToString()

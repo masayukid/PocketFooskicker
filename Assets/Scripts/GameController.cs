@@ -186,11 +186,11 @@ public class GameController : MonoBehaviour
         Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
         goalPlayer.AddScore();
 
-        if (goalPlayer.IsSelf && _selfPlayer.Score.IsWinningScore())
+        if (goalPlayer.IsSelf && _selfPlayer.IsWinner())
         {
             EndGame(_selfPlayer);
             return;
-        } else if (!goalPlayer.IsSelf && _opponentPlayer.Score.IsWinningScore()) {
+        } else if (!goalPlayer.IsSelf && _opponentPlayer.IsWinner()) {
             EndGame(_opponentPlayer);
             return;
         }
