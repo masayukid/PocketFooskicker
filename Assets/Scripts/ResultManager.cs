@@ -35,7 +35,7 @@ public class ResultManager : MonoBehaviour
         float canvasWidth = canvasRect.rect.width;
         float canvasHeight = canvasRect.rect.height;
         Vector2 leftPosition = new Vector2(-canvasWidth / 2, canvasHeight / 8);
-        Vector2 rightPosition = new Vector2(canvasWidth / 8, canvasHeight / 8);
+        Vector2 rightPosition = new Vector2(canvasWidth / 2, canvasHeight / 8);
         
         InstantiateParticle(leftPosition, Quaternion.Euler(0, 90, 0));
         InstantiateParticle(rightPosition, Quaternion.Euler(0, -90, 0));
