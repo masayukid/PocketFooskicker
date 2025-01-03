@@ -1,21 +1,33 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ResultManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _scoreText;
+    [SerializeField] private TextMeshProUGUI _difficultyText;
     [SerializeField] private TextMeshProUGUI _resultMessage;
+    [SerializeField] private Image _difficultyImage;
+    [SerializeField] private Sprite _hardSprite;
+    [SerializeField] private Sprite _normalSprite;
+    [SerializeField] private Sprite _easySprite;
     [SerializeField] private GameObject _victoryParticlePrefab;
     [SerializeField] private Canvas _canvas;
+
+    private CPUMode _currentCpuMode;
 
     void Start()
     {
         int playerScore = TransitionManager.Instance.GetDataOrDefault("PlayerScore", 0);
         int opponentScore = TransitionManager.Instance.GetDataOrDefault("OpponentScore", 0);
         bool isSelfWinner = TransitionManager.Instance.GetDataOrDefault("IsSelfWinner", true);
+        _currentCpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", CPUMode.Normal);
+        string difficulty = _currentCpuMode.ToString();
         _scoreText.text = $"{playerScore} - {opponentScore}";
+        _difficultyText.text = $"{difficulty}";
+        SetDifficultyImage(_currentCpuMode);
 
         if (isSelfWinner)
         {
@@ -26,6 +38,24 @@ public class ResultManager : MonoBehaviour
         {
             _resultMessage.text = "You Lose...";
             _resultMessage.color = Color.red;
+        }
+    }
+
+    private void SetDifficultyImage(CPUMode mode)
+    {
+        switch (mode)
+        {
+            case CPUMode.Hard:
+                _difficultyImage.sprite = _hardSprite;
+                break;
+            case CPUMode.Normal:
+                _difficultyImage.sprite = _normalSprite;
+                break;
+            case CPUMode.Easy:
+                _difficultyImage.sprite = _easySprite;
+                break;
+            default:
+                break;
         }
     }
 
@@ -59,7 +89,11 @@ public class ResultManager : MonoBehaviour
     {
         if (sceneName == "Menu" || sceneName == "Main")
         {
-            TransitionManager.Instance.TransitionTo(sceneName);
+            var data = new Dictionary<string, object>
+            {
+                { "CPUMode", _currentCpuMode }
+            };
+            TransitionManager.Instance.TransitionTo(sceneName, data);
         }
         else
         {
