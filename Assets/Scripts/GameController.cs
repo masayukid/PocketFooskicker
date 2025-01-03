@@ -185,13 +185,9 @@ public class GameController : MonoBehaviour
 
         Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
         goalPlayer.AddScore();
-
-        if (goalPlayer.IsSelf && _selfPlayer.IsWinner())
+        if (goalPlayer.IsWinner())
         {
-            EndGame(_selfPlayer);
-            return;
-        } else if (!goalPlayer.IsSelf && _opponentPlayer.IsWinner()) {
-            EndGame(_opponentPlayer);
+            EndGame(goalPlayer.IsSelf);
             return;
         }
         _isSelfTurn = !goalPlayer.IsSelf;
@@ -211,13 +207,13 @@ public class GameController : MonoBehaviour
         ResetRespawnTimer();
     }
 
-    private void EndGame(Player winner)
+    private void EndGame(bool isSelf)
     {
         var resultData = new Dictionary<string, object>
         {
             { "PlayerScore", _selfPlayer.Score.Value },
             { "OpponentScore", _opponentPlayer.Score.Value },
-            { "IsSelfWinner", winner.IsSelf }
+            { "IsSelfWinner", isSelf }
         };
         TransitionManager.Instance.TransitionTo("Result", resultData);
     }
