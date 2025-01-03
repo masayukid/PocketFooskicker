@@ -53,7 +53,6 @@ public class ResultManager : MonoBehaviour
             rectTransform.localRotation = rotation;
             rectTransform.localScale = Vector3.one;
         }
-        Destroy(particleEffect, 5.0f);
     }
 
     public void OnSelect(string sceneName)
