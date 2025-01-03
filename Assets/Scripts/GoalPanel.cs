@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GoalPanel : MonoBehaviour
 {
     [SerializeField] private Image _textImage;
-    public event Action OnClose;
+    private event Action _onClose;
     private Animation _animation;
 
     void Awake()
@@ -13,7 +13,7 @@ public class GoalPanel : MonoBehaviour
         _animation = GetComponent<Animation>();
     }
 
-    public void Open(Color color)
+    public void Open(Color color, Action onClose)
     {
         if (gameObject.activeSelf)
         {
@@ -23,11 +23,13 @@ public class GoalPanel : MonoBehaviour
         _textImage.color = color;
         gameObject.SetActive(true);
         _animation.Play();
+        _onClose = onClose;
     }
 
     public void Close()
     {
-        OnClose?.Invoke();
+        _onClose?.Invoke();
+        _onClose = null;
         gameObject.SetActive(false);
     }
 }

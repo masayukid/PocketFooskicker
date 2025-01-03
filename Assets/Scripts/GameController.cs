@@ -127,7 +127,6 @@ public class GameController : MonoBehaviour
     {
         _selfGoal.OnGoal += OnGoal;
         _opponentGoal.OnGoal += OnGoal;
-        _goalPanel.OnClose += SpawnBall;
     }
 
     private void ResetGameState()
@@ -186,16 +185,19 @@ public class GameController : MonoBehaviour
 
         Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
         goalPlayer.AddScore();
-        if (goalPlayer.IsWinner())
-        {
-            EndGame(goalPlayer.IsSelf);
-            return;
-        }
         _isSelfTurn = !goalPlayer.IsSelf;
-        _goalPanel.Open(goalPlayer.Color);
 
         _selfPlayer.SeizeRodControlAndReset();
         _opponentPlayer.SeizeRodControlAndReset();
+
+        if (goalPlayer.IsWinner())
+        {
+            _goalPanel.Open(goalPlayer.Color, () => EndGame(goalPlayer.IsSelf));
+        }
+        else
+        {
+            _goalPanel.Open(goalPlayer.Color, SpawnBall);
+        }
     }
 
     private void OnTouchBall()
