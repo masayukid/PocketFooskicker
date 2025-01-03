@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private CPUConfig _cpuConfig;
     [SerializeField] private CPUMode _defaultCPUMode;
 
+    private CPUMode _currentCpuMode;
     private Player _selfPlayer;
     private Player _opponentPlayer;
     private Ball _currentBall;
@@ -75,8 +77,8 @@ public class GameController : MonoBehaviour
         SetUpRodControllers(selfRodControllers, inputHandlers);
 
         // CPU設定
-        var cpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
-        var settings = _cpuConfig.GetSettingsByMode(cpuMode);
+        _currentCpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
+        var settings = _cpuConfig.GetSettingsByMode(_currentCpuMode);
 
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
@@ -125,7 +127,6 @@ public class GameController : MonoBehaviour
     {
         _selfGoal.OnGoal += OnGoal;
         _opponentGoal.OnGoal += OnGoal;
-        _goalPanel.OnClose += SpawnBall;
     }
 
     private void ResetGameState()
@@ -185,10 +186,18 @@ public class GameController : MonoBehaviour
         Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
         goalPlayer.AddScore();
         _isSelfTurn = !goalPlayer.IsSelf;
-        _goalPanel.Open(goalPlayer.Color);
 
         _selfPlayer.SeizeRodControlAndReset();
         _opponentPlayer.SeizeRodControlAndReset();
+
+        if (goalPlayer.IsWinner())
+        {
+            _goalPanel.Open(goalPlayer.Color, () => EndGame(goalPlayer.IsSelf));
+        }
+        else
+        {
+            _goalPanel.Open(goalPlayer.Color, SpawnBall);
+        }
     }
 
     private void OnTouchBall()
@@ -199,6 +208,18 @@ public class GameController : MonoBehaviour
         }
 
         ResetRespawnTimer();
+    }
+
+    private void EndGame(bool isSelf)
+    {
+        var resultData = new Dictionary<string, object>
+        {
+            { "PlayerScore", _selfPlayer.Score.Value },
+            { "OpponentScore", _opponentPlayer.Score.Value },
+            { "IsSelfWinner", isSelf },
+            { "CPUMode", _currentCpuMode }
+        };
+        TransitionManager.Instance.TransitionTo("Result", resultData);
     }
 
     private void ResetRespawnTimer()
