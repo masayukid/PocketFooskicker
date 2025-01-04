@@ -221,7 +221,6 @@ public class GameController : MonoBehaviour
         }
         else if (collision.gameObject.name != "Down")
         {
-            Debug.Log(collision.gameObject.name);
             _seCollision.Play();
         }
         ResetRespawnTimer();
