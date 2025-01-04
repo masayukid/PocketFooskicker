@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
@@ -22,6 +23,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private GoalPanel _goalPanel;
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
+    [SerializeField] private AudioSource _seCollision;
+    [SerializeField] private AudioSource _seKickBall;
+    [SerializeField] private AudioSource _seWhistle;
     [Header("CPU Settings")]
     [SerializeField] private CPUConfig _cpuConfig;
     [SerializeField] private CPUMode _defaultCPUMode;
@@ -139,6 +143,11 @@ public class GameController : MonoBehaviour
 
     private void SpawnBall()
     {
+        StartCoroutine(SpawnBallAfterWhistle());
+    }
+
+    private IEnumerator SpawnBallAfterWhistle()
+    {
         if (_currentBall != null)
         {
             Destroy(_currentBall.gameObject);
@@ -153,6 +162,9 @@ public class GameController : MonoBehaviour
         _isKickedOff = false;
 
         OnSpawnBall?.Invoke(_currentBall);
+
+        _seWhistle.Play();
+        yield return new WaitForSeconds(_seWhistle.clip.length);
 
         _selfPlayer.ReturnRodControl();
         _opponentPlayer.ReturnRodControl();
@@ -200,13 +212,18 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void OnTouchBall()
+    private void OnTouchBall(Collision collision)
     {
-        if (!_isKickedOff)
+        _isKickedOff = true;
+        if (collision.gameObject.name == "Rod")
         {
-            _isKickedOff = true;
+            _seKickBall.Play();
         }
-
+        else if (collision.gameObject.name != "Down")
+        {
+            Debug.Log(collision.gameObject.name);
+            _seCollision.Play();
+        }
         ResetRespawnTimer();
     }
 
