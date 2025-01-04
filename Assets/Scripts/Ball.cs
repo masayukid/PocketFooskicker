@@ -14,7 +14,10 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        OnTouch?.Invoke();
+        if (other.gameObject.name != "Field")
+        {
+            OnTouch?.Invoke();
+        }
     }
 
     public void Inactivate()
