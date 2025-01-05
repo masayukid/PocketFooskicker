@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private GameObject _victoryParticlePrefab;
     [SerializeField] private Canvas _canvas;
 
+    private const float CRACKER_DELAY_SECONDS = 1.5f;
     private CPUMode _currentCpuMode;
 
     void Start()
@@ -32,12 +34,13 @@ public class ResultManager : MonoBehaviour
         if (isSelfWinner)
         {
             _resultMessage.text = "You Win !";
-            SpawnVictoryParticles();
+            StartCoroutine(PlayVictorySequence());
         }
         else
         {
             _resultMessage.text = "You Lose...";
             _resultMessage.color = Color.red;
+            SoundManager.Instance.PlayBGM("bgm_result");
         }
     }
 
@@ -59,7 +62,15 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    private void SpawnVictoryParticles()
+    private IEnumerator PlayVictorySequence()
+    {
+        SoundManager.Instance.PlaySE("se_victory");
+        yield return new WaitForSeconds(CRACKER_DELAY_SECONDS);
+        yield return SpawnVictoryParticles();
+        SoundManager.Instance.PlayBGM("bgm_result");
+    }
+
+    private IEnumerator SpawnVictoryParticles()
     {
         RectTransform canvasRect = _canvas.GetComponent<RectTransform>();
         float canvasWidth = canvasRect.rect.width;
@@ -69,6 +80,7 @@ public class ResultManager : MonoBehaviour
         
         InstantiateParticle(leftPosition, Quaternion.Euler(0, 90, 0));
         InstantiateParticle(rightPosition, Quaternion.Euler(0, -90, 0));
+        return SoundManager.Instance.PlaySECoroutine("se_cracker");
     }
 
     private void InstantiateParticle(Vector2 anchoredPosition, Quaternion rotation)
@@ -87,6 +99,8 @@ public class ResultManager : MonoBehaviour
 
     public void OnSelect(string sceneName)
     {
+        SoundManager.Instance.PlaySE("se_click");
+        
         if (sceneName == "Menu" || sceneName == "Main")
         {
             var data = new Dictionary<string, object>

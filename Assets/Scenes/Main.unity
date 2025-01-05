@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 131235165}
   m_Layer: 0
   m_Name: Top
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 229109659}
   m_Layer: 0
   m_Name: Slope
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 399488118}
   m_Layer: 0
   m_Name: TopWall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -785,6 +785,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3535419000528749358, guid: d0ccdc637fae5394f9910ebe5c84d61d,
+        type: 3}
+      propertyPath: _seGoal
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0ccdc637fae5394f9910ebe5c84d61d, type: 3}
 --- !u!4 &441023226 stripped
@@ -851,7 +856,7 @@ GameObject:
   - component: {fileID: 473072834}
   m_Layer: 0
   m_Name: Bottom
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -979,7 +984,7 @@ GameObject:
   - component: {fileID: 606650623}
   m_Layer: 0
   m_Name: Slope
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1388,6 +1393,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textImage: {fileID: 1865297600}
+--- !u!1001 &733379896
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840893966839866234, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8980123982745853839, guid: 0d4ec0389ef06f6459fb8359ae0be3db,
+        type: 3}
+      propertyPath: m_Name
+      value: SoundManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0d4ec0389ef06f6459fb8359ae0be3db, type: 3}
 --- !u!1 &808089094
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,6 +1634,11 @@ PrefabInstance:
       propertyPath: _isSelf
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3535419000528749358, guid: d0ccdc637fae5394f9910ebe5c84d61d,
+        type: 3}
+      propertyPath: _seGoal
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4256486856446176288, guid: d0ccdc637fae5394f9910ebe5c84d61d,
         type: 3}
       propertyPath: m_IsActive
@@ -1599,7 +1678,7 @@ GameObject:
   - component: {fileID: 842285823}
   m_Layer: 0
   m_Name: Slope
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1936,7 +2015,7 @@ GameObject:
   - component: {fileID: 1195593118}
   m_Layer: 0
   m_Name: Top
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2418,7 +2497,7 @@ GameObject:
   - component: {fileID: 1560644278}
   m_Layer: 0
   m_Name: Bottom
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2546,7 +2625,7 @@ GameObject:
   - component: {fileID: 1611413047}
   m_Layer: 0
   m_Name: Field
-  m_TagString: Untagged
+  m_TagString: Field
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3281,7 +3360,7 @@ GameObject:
   - component: {fileID: 2017718107}
   m_Layer: 0
   m_Name: Slope
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3468,7 +3547,7 @@ GameObject:
   - component: {fileID: 2079955958}
   m_Layer: 0
   m_Name: BottomWall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

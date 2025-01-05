@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
@@ -36,6 +37,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        SoundManager.Instance.PlayBGM("bgm_main");
         Initialize();
         SpawnBall();
     }
@@ -139,6 +141,11 @@ public class GameController : MonoBehaviour
 
     private void SpawnBall()
     {
+        StartCoroutine(SpawnBallAfterWhistle());
+    }
+
+    private IEnumerator SpawnBallAfterWhistle()
+    {
         if (_currentBall != null)
         {
             Destroy(_currentBall.gameObject);
@@ -153,6 +160,8 @@ public class GameController : MonoBehaviour
         _isKickedOff = false;
 
         OnSpawnBall?.Invoke(_currentBall);
+
+        yield return SoundManager.Instance.PlaySECoroutine("se_whistle");
 
         _selfPlayer.ReturnRodControl();
         _opponentPlayer.ReturnRodControl();
@@ -200,13 +209,19 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void OnTouchBall()
+    private void OnTouchBall(Collision collision)
     {
-        if (!_isKickedOff)
-        {
-            _isKickedOff = true;
-        }
+        _isKickedOff = true;
 
+        if (collision.gameObject.CompareTag("Rod"))
+        {
+            SoundManager.Instance.PlaySE("se_kick_ball");
+        }
+        else if (collision.gameObject.CompareTag("Wall"))
+        {
+            SoundManager.Instance.PlaySE("se_collision");
+        }
+        
         ResetRespawnTimer();
     }
 
