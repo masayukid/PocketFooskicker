@@ -16,11 +16,8 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private Sprite _easySprite;
     [SerializeField] private GameObject _victoryParticlePrefab;
     [SerializeField] private Canvas _canvas;
-    [SerializeField] private AudioSource _bgm;
-    [SerializeField] private AudioSource _seClick;
-    [SerializeField] private AudioSource _seCracker;
-    [SerializeField] private AudioSource _seVictory;
 
+    private const float CRACKER_DELAY_SECONDS = 1.5f;
     private CPUMode _currentCpuMode;
 
     void Start()
@@ -43,7 +40,7 @@ public class ResultManager : MonoBehaviour
         {
             _resultMessage.text = "You Lose...";
             _resultMessage.color = Color.red;
-            _bgm.Play();
+            SoundManager.Instance.PlayBGM("bgm_result");
         }
     }
 
@@ -67,16 +64,13 @@ public class ResultManager : MonoBehaviour
 
     private IEnumerator PlayVictorySequence()
     {
-        _seVictory.Play();
-        yield return new WaitForSeconds(_seVictory.clip.length * 0.4f);
-
-        SpawnVictoryParticles();
-        yield return new WaitForSeconds(_seCracker.clip.length);
-
-        _bgm.Play();
+        SoundManager.Instance.PlaySE("se_victory");
+        yield return new WaitForSeconds(CRACKER_DELAY_SECONDS);
+        yield return SpawnVictoryParticles();
+        SoundManager.Instance.PlayBGM("bgm_result");
     }
 
-    private void SpawnVictoryParticles()
+    private IEnumerator SpawnVictoryParticles()
     {
         RectTransform canvasRect = _canvas.GetComponent<RectTransform>();
         float canvasWidth = canvasRect.rect.width;
@@ -86,7 +80,7 @@ public class ResultManager : MonoBehaviour
         
         InstantiateParticle(leftPosition, Quaternion.Euler(0, 90, 0));
         InstantiateParticle(rightPosition, Quaternion.Euler(0, -90, 0));
-        _seCracker.Play();
+        return SoundManager.Instance.PlaySECoroutine("se_cracker");
     }
 
     private void InstantiateParticle(Vector2 anchoredPosition, Quaternion rotation)
@@ -105,7 +99,7 @@ public class ResultManager : MonoBehaviour
 
     public void OnSelect(string sceneName)
     {
-        _seClick.Play();
+        SoundManager.Instance.PlaySE("se_click");
         
         if (sceneName == "Menu" || sceneName == "Main")
         {

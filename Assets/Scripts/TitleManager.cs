@@ -3,14 +3,18 @@
 public class TitleManager : MonoBehaviour
 {
     [SerializeField] private Animation _titleAnim;
-    [SerializeField] private AudioSource _seClick;
+
+    void Start()
+    {
+        SoundManager.Instance.PlayBGM("bgm_title");
+    }
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _seClick.Play();
-
+            SoundManager.Instance.PlaySE("se_click");
+            
             if (_titleAnim.isPlaying)
             {
                 // アニメーション再生中ならスキップ

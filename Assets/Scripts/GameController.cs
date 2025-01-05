@@ -23,9 +23,6 @@ public class GameController : MonoBehaviour
     [SerializeField] private GoalPanel _goalPanel;
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
-    [SerializeField] private AudioSource _seCollision;
-    [SerializeField] private AudioSource _seKickBall;
-    [SerializeField] private AudioSource _seWhistle;
     [Header("CPU Settings")]
     [SerializeField] private CPUConfig _cpuConfig;
     [SerializeField] private CPUMode _defaultCPUMode;
@@ -40,6 +37,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        SoundManager.Instance.PlayBGM("bgm_main");
         Initialize();
         SpawnBall();
     }
@@ -163,8 +161,7 @@ public class GameController : MonoBehaviour
 
         OnSpawnBall?.Invoke(_currentBall);
 
-        _seWhistle.Play();
-        yield return new WaitForSeconds(_seWhistle.clip.length);
+        yield return SoundManager.Instance.PlaySECoroutine("se_whistle");
 
         _selfPlayer.ReturnRodControl();
         _opponentPlayer.ReturnRodControl();
@@ -215,14 +212,16 @@ public class GameController : MonoBehaviour
     private void OnTouchBall(Collision collision)
     {
         _isKickedOff = true;
-        if (collision.gameObject.name == "Rod")
+
+        if (collision.gameObject.CompareTag("Rod"))
         {
-            _seKickBall.Play();
+            SoundManager.Instance.PlaySE("se_kick_ball");
         }
-        else if (collision.gameObject.name != "Down")
+        else if (collision.gameObject.CompareTag("Wall"))
         {
-            _seCollision.Play();
+            SoundManager.Instance.PlaySE("se_collision");
         }
+        
         ResetRespawnTimer();
     }
 

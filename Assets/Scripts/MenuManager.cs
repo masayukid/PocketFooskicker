@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
-    [SerializeField] private AudioSource _seClick;
+    void Start()
+    {
+        SoundManager.Instance.PlayBGM("bgm_menu");
+    }
 
     public void OnSelect(string difficulty)
     {
-        _seClick.Play();
+        SoundManager.Instance.PlaySE("se_click");
 
         if (Enum.TryParse(difficulty, out CPUMode cpuMode))
         {

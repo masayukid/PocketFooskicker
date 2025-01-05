@@ -14,7 +14,7 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.name != "Field")
+        if (!other.gameObject.CompareTag("Field"))
         {
             OnTouch?.Invoke(other);
         }
