@@ -39,14 +39,6 @@ public class RodController : MonoBehaviour
         _inputHandler = inputHandler;
     }
 
-    public void SetSensitivity(float movementSensitivity, float rotationSensitivity)
-    {
-        if (_inputHandler is GyroRodInputHandler gyroHandler)
-        {
-            gyroHandler.SetSensitivity(movementSensitivity, rotationSensitivity);
-        }
-    }
-
     public void SetColor(Color color)
     {
         foreach (var doll in _dolls)
