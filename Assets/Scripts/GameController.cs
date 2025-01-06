@@ -1,6 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
@@ -26,6 +28,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private CPUMode _defaultCPUMode;
     [SerializeField] private SensitivityManager _sensitivityManager;
 
+    private CPUMode _currentCpuMode;
     private Player _selfPlayer;
     private Player _opponentPlayer;
     private Ball _currentBall;
@@ -35,6 +38,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        SoundManager.Instance.PlayBGM("bgm_main");
         Initialize();
         SpawnBall();
     }
@@ -77,8 +81,8 @@ public class GameController : MonoBehaviour
         SetUpRodControllers(selfRodControllers, inputHandlers);
 
         // CPU設定
-        var cpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
-        var settings = _cpuConfig.GetSettingsByMode(cpuMode);
+        _currentCpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
+        var settings = _cpuConfig.GetSettingsByMode(_currentCpuMode);
 
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
         var cpuInputHandlers = opponentRodControllers.Select(rod =>
@@ -127,7 +131,6 @@ public class GameController : MonoBehaviour
     {
         _selfGoal.OnGoal += OnGoal;
         _opponentGoal.OnGoal += OnGoal;
-        _goalPanel.OnClose += SpawnBall;
     }
 
     private void ResetGameState()
@@ -139,6 +142,11 @@ public class GameController : MonoBehaviour
     }
 
     private void SpawnBall()
+    {
+        StartCoroutine(SpawnBallAfterWhistle());
+    }
+
+    private IEnumerator SpawnBallAfterWhistle()
     {
         if (_currentBall != null)
         {
@@ -154,6 +162,8 @@ public class GameController : MonoBehaviour
         _isKickedOff = false;
 
         OnSpawnBall?.Invoke(_currentBall);
+
+        yield return SoundManager.Instance.PlaySECoroutine("se_whistle");
 
         _selfPlayer.ReturnRodControl();
         _opponentPlayer.ReturnRodControl();
@@ -187,20 +197,46 @@ public class GameController : MonoBehaviour
         Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
         goalPlayer.AddScore();
         _isSelfTurn = !goalPlayer.IsSelf;
-        _goalPanel.Open(goalPlayer.Color);
 
         _selfPlayer.SeizeRodControlAndReset();
         _opponentPlayer.SeizeRodControlAndReset();
+
+        if (goalPlayer.IsWinner())
+        {
+            _goalPanel.Open(goalPlayer.Color, () => EndGame(goalPlayer.IsSelf));
+        }
+        else
+        {
+            _goalPanel.Open(goalPlayer.Color, SpawnBall);
+        }
     }
 
-    private void OnTouchBall()
+    private void OnTouchBall(Collision collision)
     {
-        if (!_isKickedOff)
-        {
-            _isKickedOff = true;
-        }
+        _isKickedOff = true;
 
+        if (collision.gameObject.CompareTag("Rod"))
+        {
+            SoundManager.Instance.PlaySE("se_kick_ball");
+        }
+        else if (collision.gameObject.CompareTag("Wall"))
+        {
+            SoundManager.Instance.PlaySE("se_collision");
+        }
+        
         ResetRespawnTimer();
+    }
+
+    private void EndGame(bool isSelf)
+    {
+        var resultData = new Dictionary<string, object>
+        {
+            { "PlayerScore", _selfPlayer.Score.Value },
+            { "OpponentScore", _opponentPlayer.Score.Value },
+            { "IsSelfWinner", isSelf },
+            { "CPUMode", _currentCpuMode }
+        };
+        TransitionManager.Instance.TransitionTo("Result", resultData);
     }
 
     private void ResetRespawnTimer()

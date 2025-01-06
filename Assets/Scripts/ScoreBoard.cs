@@ -4,6 +4,7 @@ using UnityEngine;
 public class ScoreBoard : MonoBehaviour
 {
     private ScoreLamp[] _lamps;
+    public int MaxLamps => _lamps.Length;
 
     void Awake()
     {
@@ -20,12 +21,12 @@ public class ScoreBoard : MonoBehaviour
 
     public void DisplayScore(Score score)
     {
-        if (score.Value > _lamps.Length)
+        if (score.Value > MaxLamps)
         {
             throw new ArgumentException($"ScoreLampの数より大きなScoreが渡されました: {score.Value}");
         }
         
-        for (int i = 0; i < _lamps.Length; i++)
+        for (int i = 0; i < MaxLamps; i++)
         {
             if (i < score.Value)
             {

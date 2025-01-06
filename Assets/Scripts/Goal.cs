@@ -14,6 +14,7 @@ public class Goal : MonoBehaviour
         if (other.CompareTag("Ball"))
         {
             _goalParticle.SetActive(true);
+            SoundManager.Instance.PlaySE("se_goal");
             OnGoal?.Invoke(this);
         }
     }
