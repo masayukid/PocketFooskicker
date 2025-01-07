@@ -34,6 +34,7 @@ public class ResultManager : MonoBehaviour
         if (isSelfWinner)
         {
             _resultMessage.text = "You Win !";
+            SoundManager.Instance.StopBGM();
             StartCoroutine(PlayVictorySequence());
         }
         else

@@ -55,6 +55,15 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    // BGM停止メソッド
+    public void StopBGM()
+    {
+        if (_bgmSource.isPlaying)
+        {
+            _bgmSource.Stop();
+        }
+    }
+
     // SE再生メソッド
     public void PlaySE(string clipName)
     {
