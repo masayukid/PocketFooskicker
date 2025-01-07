@@ -3,9 +3,8 @@ using UnityEngine;
 public class GyroRodInputHandler : IRodInputHandler
 {
     private const float REACTION_DISTANCE = 1.6f; // ボールに反応する最大距離
-    public float MovementSensitivity = 1.0f; 
-    public float RotationSensitivity = 300f;
-    private const float MIN_ACCELERATION_THRESH = 0.3f;
+    private float _movementSensitivity = 1.0f; 
+    private float _rotationSensitivity = 300f;
 
     private Ball _ball;
     private readonly Doll[] _dolls;
@@ -16,12 +15,14 @@ public class GyroRodInputHandler : IRodInputHandler
         _dolls = rodController.GetDolls();
     }
 
-    public void SetSensitivity(float movementSensitivity, float rotationSensitivity)
+    public void SetMovementSensitivity(float movementSensitivity)
     {
-        MovementSensitivity = movementSensitivity;
-        RotationSensitivity = rotationSensitivity;
-        Debug.Log($"[SetSensitivity] Movement sensitivity set to: {MovementSensitivity}");
-        Debug.Log($"[SetSensitivity] Rotation sensitivity set to: {RotationSensitivity}");
+        _movementSensitivity = movementSensitivity;
+    }
+    
+    public void SetRotationSensitivity(float rotationSensitivity)
+    {
+        _rotationSensitivity = rotationSensitivity;
     }
 
     public void UpdateBallReference(Ball newBall)
@@ -100,7 +101,7 @@ public class GyroRodInputHandler : IRodInputHandler
         }
 
         float normalized = Mathf.Clamp(tiltZ.x / 90f, -1f, 1f);
-        float movement = -normalized * MovementSensitivity; 
+        float movement = -normalized * _movementSensitivity; 
         return movement;
     }
 
@@ -108,7 +109,7 @@ public class GyroRodInputHandler : IRodInputHandler
     {
         Vector3 angularVelocity = Input.gyro.rotationRate;
         float rotationRate = angularVelocity.y;
-        float rotationDelta = rotationRate * RotationSensitivity; 
+        float rotationDelta = rotationRate * _rotationSensitivity; 
         return rotationDelta * Time.fixedDeltaTime;
     }
 }

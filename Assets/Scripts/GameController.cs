@@ -21,12 +21,12 @@ public class GameController : MonoBehaviour
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
     [SerializeField] private GoalPanel _goalPanel;
+    [SerializeField] private PausePanel _pausePanel;
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
     [Header("CPU Settings")]
     [SerializeField] private CPUConfig _cpuConfig;
     [SerializeField] private CPUMode _defaultCPUMode;
-    [SerializeField] private SensitivityManager _sensitivityManager;
 
     private CPUMode _currentCpuMode;
     private Player _selfPlayer;
@@ -68,10 +68,11 @@ public class GameController : MonoBehaviour
             inputHandlers = selfRodControllers.Select(rod =>
             {
                 var handler = new GyroRodInputHandler(_currentBall, rod);
-                _sensitivityManager.SetGyroInputHandler(handler);
                 OnSpawnBall += handler.UpdateBallReference;
                 return handler;
             }).ToArray();
+
+            _pausePanel.EnableGyroSettings((GyroRodInputHandler[])inputHandlers);
         }
         else
         {
