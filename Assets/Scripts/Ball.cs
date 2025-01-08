@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public event Action OnTouch;
+    public event Action<Collision> OnTouch;
 
     private Rigidbody _rigidbody;
 
@@ -14,11 +14,24 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        OnTouch?.Invoke();
+        if (!other.gameObject.CompareTag("Field"))
+        {
+            OnTouch?.Invoke(other);
+        }
+    }
+
+    public void Inactivate()
+    {
+        gameObject.SetActive(false);
     }
 
     public float GetCurrentSpeed()
     {
         return _rigidbody.velocity.magnitude;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return _rigidbody.position;
     }
 }
