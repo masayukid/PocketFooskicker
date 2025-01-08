@@ -93,15 +93,11 @@ public class GyroRodInputHandler : IRodInputHandler
 
     private float GetGyroMovement()
     {
-        Vector3 tiltZ = Input.gyro.attitude.eulerAngles;
-
-        if (tiltZ.x > 180)
-        {
-            tiltZ.x -= 360;
-        }
-
-        float normalized = Mathf.Clamp(tiltZ.x / 90f, -1f, 1f);
-        float movement = -normalized * _movementSensitivity; 
+        Quaternion deviceRotation = Input.gyro.attitude;
+        Vector3 gravity = deviceRotation * Vector3.down;
+        float tilt = gravity.z;
+        float normalizedTilt = Mathf.Clamp(tilt, -1f, 1f);
+        float movement = normalizedTilt * _movementSensitivity;
         return movement;
     }
 
