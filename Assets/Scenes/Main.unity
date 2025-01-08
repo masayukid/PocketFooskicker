@@ -668,8 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8679ee9c4eb204f1980c3ebbbea9c566, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sensitivitySlider: {fileID: 0}
-  _currentValueText: {fileID: 0}
+  _currentValueText: {fileID: 1168784188}
 --- !u!4 &304477160 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7982459337374719356, guid: 3006f442da1453e489fcc1885e437dad,
@@ -4089,8 +4088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8679ee9c4eb204f1980c3ebbbea9c566, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sensitivitySlider: {fileID: 0}
-  _currentValueText: {fileID: 0}
+  _currentValueText: {fileID: 379682520}
 --- !u!1 &1531357422
 GameObject:
   m_ObjectHideFlags: 0

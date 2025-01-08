@@ -1,12 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
+[RequireComponent(typeof(Slider))]
 public class SensitivitySliderController : MonoBehaviour
 {
-    [Header("UI Elements")]
-    [SerializeField] private Slider _sensitivitySlider;       // 対象スライダー
     [SerializeField] private Text _currentValueText; // ハンドルの上の現在値テキスト
+
+    private Slider _sensitivitySlider;
+
+    private void Awake()
+    {
+        _sensitivitySlider = GetComponent<Slider>();
+    }
 
     private void Start()
     {
