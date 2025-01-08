@@ -4144,7 +4144,7 @@ MonoBehaviour:
   _selfGoal: {fileID: 841779183}
   _opponentGoal: {fileID: 441023227}
   _goalPanel: {fileID: 698869870}
-  _pausePanel: {fileID: 0}
+  _pausePanel: {fileID: 1652910577}
   _ballPrefab: {fileID: 6273729313110264930, guid: 3addafb61036c1e46bfd81c473c2034c,
     type: 3}
   _ballInitialOffset: {x: -0.75, y: 0.4}
