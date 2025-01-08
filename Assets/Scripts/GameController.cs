@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
     [SerializeField] private GoalPanel _goalPanel;
+    [SerializeField] private PausePanel _pausePanel;
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
     [Header("CPU Settings")]
@@ -70,6 +71,8 @@ public class GameController : MonoBehaviour
                 OnSpawnBall += handler.UpdateBallReference;
                 return handler;
             }).ToArray();
+
+            _pausePanel.EnableGyroSettings((GyroRodInputHandler[])inputHandlers);
         }
         else
         {

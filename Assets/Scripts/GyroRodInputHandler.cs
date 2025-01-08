@@ -3,9 +3,8 @@ using UnityEngine;
 public class GyroRodInputHandler : IRodInputHandler
 {
     private const float REACTION_DISTANCE = 1.6f; // ボールに反応する最大距離
-    private const float GYRO_SENSITIVITY = 1.0f; // ジャイロ感度
-    private const float ACCELERATION_SENSITIVITY = 1000f; // 加速度センサ感度
-    private const float MIN_ACCELERATION_THRESH = 0.3f;
+    private float _movementSensitivity = 1.0f; 
+    private float _rotationSensitivity = 300f;
 
     private Ball _ball;
     private readonly Doll[] _dolls;
@@ -14,6 +13,16 @@ public class GyroRodInputHandler : IRodInputHandler
     {
         _ball = ball;
         _dolls = rodController.GetDolls();
+    }
+
+    public void SetMovementSensitivity(float movementSensitivity)
+    {
+        _movementSensitivity = movementSensitivity;
+    }
+    
+    public void SetRotationSensitivity(float rotationSensitivity)
+    {
+        _rotationSensitivity = rotationSensitivity;
     }
 
     public void UpdateBallReference(Ball newBall)
@@ -84,30 +93,19 @@ public class GyroRodInputHandler : IRodInputHandler
 
     private float GetGyroMovement()
     {
-        // ジャイロセンサーの傾きを取得
-        Vector3 tiltZ = Input.gyro.attitude.eulerAngles;
-
-        if (tiltZ.x > 180)
-        {
-            tiltZ.x -= 360;
-        }
-
-        float normalized = Mathf.Clamp(tiltZ.x / 90f, -1f, 1f);
-        float movement = -normalized * GYRO_SENSITIVITY; 
+        Quaternion deviceRotation = Input.gyro.attitude;
+        Vector3 gravity = deviceRotation * Vector3.down;
+        float tilt = gravity.z;
+        float normalizedTilt = Mathf.Clamp(tilt, -1f, 1f);
+        float movement = normalizedTilt * _movementSensitivity;
         return movement;
     }
 
     private float GetAccelerationRotation()
     {
-        Vector3 acceleration = Input.acceleration;
-        float horizontal = acceleration.x;
-
-        if (Mathf.Abs(horizontal) < MIN_ACCELERATION_THRESH)
-        {
-            return 0f;
-        }
-
-        float rotationDelta = -acceleration.x * ACCELERATION_SENSITIVITY; 
-        return rotationDelta * Time.fixedDeltaTime; 
+        Vector3 angularVelocity = Input.gyro.rotationRate;
+        float rotationRate = angularVelocity.y;
+        float rotationDelta = rotationRate * _rotationSensitivity; 
+        return rotationDelta * Time.fixedDeltaTime;
     }
 }
