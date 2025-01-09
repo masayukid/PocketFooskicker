@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Linq;
 using System.Collections;
-using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
@@ -82,7 +81,8 @@ public class GameController : MonoBehaviour
         SetUpRodControllers(selfRodControllers, inputHandlers);
 
         // CPU設定
-        _currentCpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
+        TransitionData transitionData = TransitionManager.Instance.GetTransitionData();
+        _currentCpuMode = transitionData.GetValueOrDefault("CPUMode", _defaultCPUMode);
         var settings = _cpuConfig.GetSettingsByMode(_currentCpuMode);
 
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
@@ -230,14 +230,13 @@ public class GameController : MonoBehaviour
 
     private void EndGame(bool isSelf)
     {
-        var resultData = new Dictionary<string, object>
-        {
-            { "PlayerScore", _selfPlayer.Score.Value },
-            { "OpponentScore", _opponentPlayer.Score.Value },
-            { "IsSelfWinner", isSelf },
-            { "CPUMode", _currentCpuMode }
-        };
-        TransitionManager.Instance.TransitionTo("Result", resultData);
+        var resultData = new TransitionData(
+            ("PlayerScore", _selfPlayer.Score.Value),
+            ("OpponentScore", _opponentPlayer.Score.Value),
+            ("IsSelfWinner", isSelf),
+            ("CPUMode", _currentCpuMode)
+        );
+        TransitionManager.Instance.TransitionTo(SceneName.Result, resultData);
     }
 
     private void ResetRespawnTimer()

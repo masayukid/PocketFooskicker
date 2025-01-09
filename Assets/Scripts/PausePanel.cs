@@ -62,6 +62,6 @@ public class PausePanel : MonoBehaviour
     public void OnClickExit()
     {
         Time.timeScale = 1;
-        TransitionManager.Instance.TransitionTo("Menu");
+        TransitionManager.Instance.TransitionTo(SceneName.Menu);
     }
 }

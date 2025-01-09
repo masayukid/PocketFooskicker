@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -22,10 +20,11 @@ public class ResultManager : MonoBehaviour
 
     void Start()
     {
-        int playerScore = TransitionManager.Instance.GetDataOrDefault("PlayerScore", 0);
-        int opponentScore = TransitionManager.Instance.GetDataOrDefault("OpponentScore", 0);
-        bool isSelfWinner = TransitionManager.Instance.GetDataOrDefault("IsSelfWinner", true);
-        _currentCpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", CPUMode.Normal);
+        TransitionData transitionData = TransitionManager.Instance.GetTransitionData();
+        int playerScore = transitionData.GetValueOrDefault("PlayerScore", 0);
+        int opponentScore = transitionData.GetValueOrDefault("OpponentScore", 0);
+        bool isSelfWinner = transitionData.GetValueOrDefault("IsSelfWinner", true);
+        _currentCpuMode = transitionData.GetValueOrDefault("CPUMode", CPUMode.Normal);
         string difficulty = _currentCpuMode.ToString();
         _scoreText.text = $"{playerScore} - {opponentScore}";
         _difficultyText.text = $"{difficulty}";
@@ -98,21 +97,21 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    public void OnSelect(string sceneName)
+    // BackToMenuButtonから呼ばれるメソッド
+    public void OnClickBackToMenu()
     {
         SoundManager.Instance.PlaySE("se_click");
-        
-        if (sceneName == "Menu" || sceneName == "Main")
-        {
-            var data = new Dictionary<string, object>
-            {
-                { "CPUMode", _currentCpuMode }
-            };
-            TransitionManager.Instance.TransitionTo(sceneName, data);
-        }
-        else
-        {
-            throw new Exception($"文字列 {sceneName} は不正です。");
-        }
+        TransitionManager.Instance.TransitionTo(SceneName.Menu);
+    }
+
+    // RetryButtonから呼ばれるメソッド
+    public void OnClickRetry()
+    {
+        SoundManager.Instance.PlaySE("se_click");
+
+        var data = new TransitionData(
+            ("CPUMode", _currentCpuMode)
+        );
+        TransitionManager.Instance.TransitionTo(SceneName.Main, data);
     }
 }

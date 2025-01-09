@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class TransitionManager : MonoBehaviour
 {
     public static TransitionManager Instance { get; private set; }
 
-    private string _sceneName = null;
-    private Dictionary<string, object> _transitionData = null;
+    private SceneName _sceneName = null;
+    private TransitionData _transitionData = null;
 
     void Awake()
     {
@@ -21,32 +20,32 @@ public class TransitionManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
     }
-
-    public T GetDataOrDefault<T>(string key, T defaultValue)
+    
+    public TransitionData GetTransitionData()
     {
-        if (_transitionData != null && _transitionData.TryGetValue(key, out var value))
+        if (_transitionData != null)
         {
-            if (value is T typedValue)
-            {
-                return typedValue;
-            }
+            return _transitionData;
         }
 
-        return defaultValue;
+        Debug.LogWarning("TransitionDataがnullです。新しいインスタンスを返します。");
+        return new TransitionData();
     }
 
-    public void TransitionTo(string sceneName, Dictionary<string, object> data = null)
+    public void TransitionTo(SceneName sceneName, TransitionData transitionData = null)
     {
         if (_sceneName != null)
         {
+            Debug.LogWarning($"現在シーン遷移中です（遷移元: {_sceneName}, 遷移先: {sceneName}）。TransitionToを呼び出すことはできません。");
             return;
         }
 
         _sceneName = sceneName;
-        _transitionData = data;
+        _transitionData = transitionData;
         gameObject.SetActive(true);
     }
 
+    // AnimationEventで呼ばれるメソッド
     public void LoadScene()
     {
         if (_sceneName == null)
@@ -54,10 +53,11 @@ public class TransitionManager : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(_sceneName);
+        SceneManager.LoadScene(_sceneName.ToString());
     }
 
-    public void OnFinish()
+    // AnimationEventで呼ばれるメソッド
+    public void OnFinishTransition()
     {
         gameObject.SetActive(false);
         _sceneName = null;
