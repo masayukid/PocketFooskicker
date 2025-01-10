@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 [RequireComponent(typeof(BallManager))]
 [RequireComponent(typeof(PlayerManager))]
@@ -42,9 +41,10 @@ public class GameController : MonoBehaviour
 
         bool gyroEnabled = SystemInfo.supportsGyroscope;
         _playerManager.SetUpSelfPlayer(_ballManager, gyroEnabled);
-
-        CPUMode cpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", CPUMode.Normal);
-        _playerManager.SetUpOpponentPlayer(_ballManager, cpuMode);
+        
+        TransitionData transitionData = TransitionManager.Instance.GetTransitionData();
+        CPUMode _currentCpuMode = transitionData.GetValueOrDefault("CPUMode",  CPUMode.Normal);
+        _playerManager.SetUpOpponentPlayer(_ballManager, _currentCpuMode);
 
         SubscribeGoalEvents();
     }
@@ -76,13 +76,12 @@ public class GameController : MonoBehaviour
 
     private void EndGame(bool isSelf)
     {
-        var resultData = new Dictionary<string, object>
-        {
-            { "PlayerScore", _playerManager.SelfPlayer.Score.Value },
-            { "OpponentScore", _playerManager.OpponentPlayer.Score.Value },
-            { "IsSelfWinner", isSelf },
-            { "CPUMode", _playerManager.CurrentCpuMode }
-        };
-        TransitionManager.Instance.TransitionTo("Result", resultData);
+        var resultData = new TransitionData(
+            ("PlayerScore", _playerManager.SelfPlayer.Score.Value),
+            ("OpponentScore", _playerManager.OpponentPlayer.Score.Value),
+            ("IsSelfWinner", isSelf),
+            ("CPUMode", _playerManager.CurrentCpuMode)
+        );
+        TransitionManager.Instance.TransitionTo(SceneName.Result, resultData);
     }
 }

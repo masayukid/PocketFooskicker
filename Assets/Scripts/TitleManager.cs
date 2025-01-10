@@ -24,7 +24,7 @@ public class TitleManager : MonoBehaviour
             }
             else
             {
-                TransitionManager.Instance.TransitionTo("Menu");
+                TransitionManager.Instance.TransitionTo(SceneName.Menu);
             }
         }
     }

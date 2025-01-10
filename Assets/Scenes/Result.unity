@@ -1044,7 +1044,7 @@ PrefabInstance:
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}
@@ -1059,7 +1059,7 @@ PrefabInstance:
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnSelect
+      value: OnClickRetry
       objectReference: {fileID: 0}
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}
@@ -1478,7 +1478,7 @@ PrefabInstance:
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}
@@ -1493,7 +1493,7 @@ PrefabInstance:
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnSelect
+      value: OnClickBackToMenu
       objectReference: {fileID: 0}
     - target: {fileID: 7237406667419051168, guid: aa2a657a9e2d44c3eaf185577e9419a3,
         type: 3}

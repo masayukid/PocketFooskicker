@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuManager : MonoBehaviour
@@ -15,12 +14,11 @@ public class MenuManager : MonoBehaviour
 
         if (Enum.TryParse(difficulty, out CPUMode cpuMode))
         {
-            var data = new Dictionary<string, object>
-            {
-                { "CPUMode", cpuMode }
-            };
-
-            TransitionManager.Instance.TransitionTo("Main", data);
+            var data = new TransitionData(
+                ("CPUMode", cpuMode)
+            );
+            
+            TransitionManager.Instance.TransitionTo(SceneName.Main, data);
         }
         else
         {
