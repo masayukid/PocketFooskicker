@@ -14,6 +14,7 @@ public class PausePanel : MonoBehaviour
 
     public void Open()
     {
+        SoundManager.Instance.PlaySE("se_pause_open");
         gameObject.SetActive(true);
         _pauseButton.SetActive(false);
         Time.timeScale = 0;
@@ -21,6 +22,7 @@ public class PausePanel : MonoBehaviour
 
     public void Close()
     {
+        SoundManager.Instance.PlaySE("se_pause_close");
         gameObject.SetActive(false);
         _pauseButton.SetActive(true);
         Time.timeScale = 1;
@@ -49,18 +51,21 @@ public class PausePanel : MonoBehaviour
 
     public void OnClickSettings()
     {
+        SoundManager.Instance.PlaySE("se_click");
         _pauseMenuGroup.SetActive(false);
         _sensitivitySettingsGroup.SetActive(true);
     }
 
     public void OnClickConfirm()
     {
+        SoundManager.Instance.PlaySE("se_click");
         _pauseMenuGroup.SetActive(true);
         _sensitivitySettingsGroup.SetActive(false);
     }
 
     public void OnClickExit()
     {
+        SoundManager.Instance.PlaySE("se_click");
         Time.timeScale = 1;
         TransitionManager.Instance.TransitionTo(SceneName.Menu);
     }

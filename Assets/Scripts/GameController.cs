@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [RequireComponent(typeof(BallManager))]
 [RequireComponent(typeof(PlayerManager))]
