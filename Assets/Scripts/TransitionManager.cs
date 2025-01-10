@@ -20,7 +20,7 @@ public class TransitionManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         gameObject.SetActive(false);
     }
-    
+
     public TransitionData GetTransitionData()
     {
         if (_transitionData != null)
