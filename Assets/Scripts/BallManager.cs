@@ -49,30 +49,21 @@ public class BallManager : MonoBehaviour
         _isSelfTurn = isSelf;
     }
 
-    void Update()
+    public bool IsBallRespawnRequired()
     {
-        HandleBallRespawn();
-    }
-
-    private void HandleBallRespawn()
-    {
-        if (_currentBall == null || !_isKickedOff)
+        if (_currentBall == null || _currentBall.IsInactive || !_isKickedOff)
         {
-            return;
+            return false;
         }
 
         if (_currentBall.GetCurrentSpeed() > BALL_RESPAWN_SPEED)
         {
             ResetRespawnTimer();
-            return;
+            return false;
         }
 
         _respawnTimer += Time.deltaTime;
-
-        if (_respawnTimer > BALL_RESPAWN_TIMEOUT)
-        {
-            SpawnBall();
-        }
+        return _respawnTimer > BALL_RESPAWN_TIMEOUT;
     }
 
     private void OnTouchBall(Collision collision)
