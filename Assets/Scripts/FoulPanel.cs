@@ -1,20 +1,17 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class GoalPanel : MonoBehaviour
+public class FoulPanel : MonoBehaviour
 {
-    [SerializeField] private Image _textImage;
     private Action _onClose;
 
-    public void Open(Color color, Action onClose)
+    public void Open(Action onClose)
     {
         if (gameObject.activeSelf)
         {
-            throw new Exception("GoalPanelは既に開いています。");
+            throw new Exception("FoulPanelは既に開いています。");
         }
 
-        _textImage.color = color;
         gameObject.SetActive(true);
         _onClose = onClose;
     }

@@ -67,6 +67,6 @@ public class PausePanel : MonoBehaviour
     {
         SoundManager.Instance.PlaySE("se_click");
         Time.timeScale = 1;
-        TransitionManager.Instance.TransitionTo("Menu");
+        TransitionManager.Instance.TransitionTo(SceneName.Menu);
     }
 }
