@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
     [SerializeField] private GoalPanel _goalPanel;
+    [SerializeField] private FoulPanel _foulPanel;
 
     private BallManager _ballManager;
     private PlayerManager _playerManager;
@@ -23,6 +24,16 @@ public class GameController : MonoBehaviour
         SoundManager.Instance.PlayBGM("bgm_main");
         Initialize();
         _ballManager.SpawnBall();
+    }
+
+    void Update()
+    {
+        if (_ballManager.IsBallRespawnRequired())
+        {
+            _ballManager.InactivateCurrentBall();
+            _playerManager.SeizeRodControlAndReset();
+            _foulPanel.Open(_ballManager.SpawnBall);
+        }
     }
 
     private void Initialize()
