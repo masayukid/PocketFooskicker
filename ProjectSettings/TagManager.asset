@@ -5,7 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ball
+  - Field
   - Rod
+  - Wall
   layers:
   - Default
   - TransparentFX

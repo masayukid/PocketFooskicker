@@ -18,6 +18,11 @@ public class Score
         return new Score(0);
     }
 
+    public bool IsWinningScore(int maxScore)
+    {
+        return _value >= maxScore;
+    }
+
     public override string ToString()
     {
         return _value.ToString();

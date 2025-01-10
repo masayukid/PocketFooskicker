@@ -11,9 +11,8 @@ public class CPURodInputHandler : IRodInputHandler
     private float _moveSpeed;
     private float _rotationSpeed;
 
-    public CPURodInputHandler(Ball ball, RodController rodController)
+    public CPURodInputHandler(RodController rodController)
     {
-        _ball = ball;
         _rodController = rodController;
         _dolls = rodController.GetDolls();
     }

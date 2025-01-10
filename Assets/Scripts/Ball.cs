@@ -4,6 +4,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     public event Action<Collision> OnTouch;
+    public bool IsInactive => !gameObject.activeSelf;
 
     private Rigidbody _rigidbody;
 
@@ -14,7 +15,8 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Rod"))
+        // ToDo: Rodのタグは必要？
+        if (other.gameObject.CompareTag("Rod") || !other.gameObject.CompareTag("Field"))
         {
             OnTouch?.Invoke(other);
         }

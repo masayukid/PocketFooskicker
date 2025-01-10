@@ -4,10 +4,17 @@ public class TitleManager : MonoBehaviour
 {
     [SerializeField] private Animation _titleAnim;
 
+    void Start()
+    {
+        SoundManager.Instance.PlayBGM("bgm_title");
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            SoundManager.Instance.PlaySE("se_click");
+            
             if (_titleAnim.isPlaying)
             {
                 // アニメーション再生中ならスキップ
@@ -17,7 +24,7 @@ public class TitleManager : MonoBehaviour
             }
             else
             {
-                TransitionManager.Instance.TransitionTo("Menu");
+                TransitionManager.Instance.TransitionTo(SceneName.Menu);
             }
         }
     }

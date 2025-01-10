@@ -1,206 +1,95 @@
-﻿using System;
-using UnityEngine;
-using System.Linq;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(BallManager))]
+[RequireComponent(typeof(PlayerManager))]
 public class GameController : MonoBehaviour
 {
-    public event Action<Ball> OnSpawnBall;
-
-    private const float BALL_RESPAWN_SPEED = 0.05f;         // ボールを再生成する下限速度
-    private const float BALL_RESPAWN_TIMEOUT = 3.0f;        // ボールが下限速度を何秒間下回ったら再生成するか
     private const float VIBRATION_IMPULSE_THRESH = 10.0f;   // バイブレーションを起こす衝撃の閾値
 
-    [SerializeField] private Color _selfPlayerColor;
-    [SerializeField] private Color _opponentPlayerColor;
-    [SerializeField] private GameObject _selfPlayerSet;
-    [SerializeField] private GameObject _opponentPlayerSet;
-    [SerializeField] private ScoreBoard _selfScoreBoard;
-    [SerializeField] private ScoreBoard _opponentScoreBoard;
-    [SerializeField] private GameObject _controlAreas;
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
     [SerializeField] private GoalPanel _goalPanel;
-    [SerializeField] private GameObject _ballPrefab;
-    [SerializeField] private Vector2 _ballInitialOffset;
-    [Header("CPU Settings")]
-    [SerializeField] private CPUConfig _cpuConfig;
-    [SerializeField] private CPUMode _defaultCPUMode;
+    [SerializeField] private FoulPanel _foulPanel;
 
-    private Player _selfPlayer;
-    private Player _opponentPlayer;
-    private Ball _currentBall;
-    private float _respawnTimer;
-    private bool _isSelfTurn;
-    private bool _isKickedOff;
+    private BallManager _ballManager;
+    private PlayerManager _playerManager;
+
+    void Awake()
+    {
+        _ballManager = GetComponent<BallManager>();
+        _playerManager = GetComponent<PlayerManager>();
+    }
 
     void Start()
     {
+        SoundManager.Instance.PlayBGM("bgm_main");
         Initialize();
-        SpawnBall();
+        _ballManager.SpawnBall();
     }
 
     void Update()
     {
-        HandleBallRespawn();
+        if (_ballManager.IsBallRespawnRequired())
+        {
+            _ballManager.InactivateCurrentBall();
+            _playerManager.SeizeRodControlAndReset();
+            _foulPanel.Open(_ballManager.SpawnBall);
+        }
     }
 
     private void Initialize()
     {
-        SetupPlayers();
-        SubscribeGoalEvents();
-        ResetGameState();
-    }
+        _ballManager.OnSpawnBall += (_) => _playerManager.ReturnRodControlAfterWhistle();
 
-    private void SetupPlayers()
-    {
-        // プレイヤー設定
-        var selfRodControllers = _selfPlayerSet.GetComponentsInChildren<RodController>();
-        IRodInputHandler[] inputHandlers;
+        bool gyroEnabled = SystemInfo.supportsGyroscope;
+        _playerManager.SetUpSelfPlayer(_ballManager, gyroEnabled);
         
-        if (SystemInfo.supportsGyroscope)
-        {
-            // デバイスがジャイロに対応している場合
-            Input.gyro.enabled = true;
-            inputHandlers = selfRodControllers.Select(rod =>
-            {
-                var handler = new GyroRodInputHandler(_currentBall, rod);
-                OnSpawnBall += handler.UpdateBallReference;
-                return handler;
-            }).ToArray();
-        }
-        else
-        {
-            inputHandlers = _controlAreas.GetComponentsInChildren<IRodInputHandler>();
-        }
+        TransitionData transitionData = TransitionManager.Instance.GetTransitionData();
+        CPUMode _currentCpuMode = transitionData.GetValueOrDefault("CPUMode",  CPUMode.Normal);
+        _playerManager.SetUpOpponentPlayer(_ballManager, _currentCpuMode);
 
-        SetUpRodControllers(selfRodControllers, inputHandlers);
-
-        // CPU設定
-        var cpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
-        var settings = _cpuConfig.GetSettingsByMode(cpuMode);
-
-        var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
-        var cpuInputHandlers = opponentRodControllers.Select(rod =>
-        {
-            var handler = new CPURodInputHandler(_currentBall, rod);
-            OnSpawnBall += handler.UpdateBallReference;
-            return handler;
-        }).ToArray();
-
-        foreach (var cpuHandler in cpuInputHandlers)
-        {
-            cpuHandler.ApplyCPUSettings(settings);
-        }
-
-        SetUpRodControllers(opponentRodControllers, cpuInputHandlers);
-
-        _selfPlayer = new Player(
-            true,
-            _selfPlayerColor,
-            selfRodControllers,
-            _selfScoreBoard
-        );
-
-        _opponentPlayer = new Player(
-            false,
-            _opponentPlayerColor,
-            opponentRodControllers,
-            _opponentScoreBoard
-        );
-    }
-
-    private void SetUpRodControllers(RodController[] rodControllers, IRodInputHandler[] inputHandlers)
-    {
-        if (rodControllers.Length != inputHandlers.Length)
-        {
-            throw new Exception("RodControllerとInputHandlerの要素数が異なります。");
-        }
-
-        for (int i = 0; i < rodControllers.Length; i++)
-        {
-            rodControllers[i].RegisterHandler(inputHandlers[i]);
-        }
+        SubscribeGoalEvents();
     }
 
     private void SubscribeGoalEvents()
     {
-        _selfGoal.OnGoal += OnGoal;
-        _opponentGoal.OnGoal += OnGoal;
-        _goalPanel.OnClose += SpawnBall;
+        _selfGoal.OnGoal += HandleGoalEvent;
+        _opponentGoal.OnGoal += HandleGoalEvent;
     }
 
-    private void ResetGameState()
+    private void HandleGoalEvent(Goal goal)
     {
-        _currentBall = null;
-        ResetRespawnTimer();
-        _isSelfTurn = true;
-        _isKickedOff = false;
-    }
+        _ballManager.InactivateCurrentBall();
+        _ballManager.SetTurnPlayer(goal.IsSelf);
+        _playerManager.SeizeRodControlAndReset();
 
-    private void SpawnBall()
-    {
-        if (_currentBall != null)
-        {
-            Destroy(_currentBall.gameObject);
-        }
-
-        float offsetX = _isSelfTurn ? _ballInitialOffset.x : -_ballInitialOffset.x;
-        var ballPosition = new Vector3(offsetX, _ballInitialOffset.y, 0);
-        GameObject ballObject = Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
-
-        _currentBall = ballObject.GetComponent<Ball>();
-        _currentBall.OnTouch += OnTouchBall;
-        _isKickedOff = false;
-
-        OnSpawnBall?.Invoke(_currentBall);
-
-        _selfPlayer.ReturnRodControl();
-        _opponentPlayer.ReturnRodControl();
-    }
-
-    private void HandleBallRespawn()
-    {
-        if (_currentBall == null || !_isKickedOff)
-        {
-            return;
-        }
-
-        if (_currentBall.GetCurrentSpeed() > BALL_RESPAWN_SPEED)
-        {
-            ResetRespawnTimer();
-            return;
-        }
-
-        _respawnTimer += Time.deltaTime;
-
-        if (_respawnTimer > BALL_RESPAWN_TIMEOUT)
-        {
-            SpawnBall();
-        }
-    }
-
-    private void OnGoal(Goal goal)
-    {
-        _currentBall.Inactivate();
-
-        Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
+        Player goalPlayer = _playerManager.GetPlayer(!goal.IsSelf);
         goalPlayer.AddScore();
-        _isSelfTurn = !goalPlayer.IsSelf;
-        _goalPanel.Open(goalPlayer.Color);
 
-        _selfPlayer.SeizeRodControlAndReset();
-        _opponentPlayer.SeizeRodControlAndReset();
+        if (goalPlayer.IsWinner())
+        {
+            _goalPanel.Open(goalPlayer.Color, () => EndGame(goalPlayer.IsSelf));
+        }
+        else
+        {
+            _goalPanel.Open(goalPlayer.Color, _ballManager.SpawnBall);
+        }
     }
 
+    private void EndGame(bool isSelf)
+    {
+        var resultData = new TransitionData(
+            ("PlayerScore", _playerManager.SelfPlayer.Score.Value),
+            ("OpponentScore", _playerManager.OpponentPlayer.Score.Value),
+            ("IsSelfWinner", isSelf),
+            ("CPUMode", _playerManager.CurrentCpuMode)
+        );
+        TransitionManager.Instance.TransitionTo(SceneName.Result, resultData);
+    }
+
+    // ToDo: とりあえず残したけど、developでは消えてます
     private void OnTouchBall(Collision collision)
     {
-        if (!_isKickedOff)
-        {
-            _isKickedOff = true;
-        }
-
-        ResetRespawnTimer();
-        
         if (collision.impulse.magnitude > VIBRATION_IMPULSE_THRESH)
         {
             var rodController = collision.gameObject.GetComponentInParent<RodController>();
@@ -210,10 +99,5 @@ public class GameController : MonoBehaviour
                 VibrationManager.ShortVibration();
             }
         }
-    }
-
-    private void ResetRespawnTimer()
-    {
-        _respawnTimer = 0;
     }
 }

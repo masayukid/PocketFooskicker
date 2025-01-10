@@ -8,6 +8,8 @@ public class Player : IPlayerInfo
     private readonly ScoreBoard _scoreBoard;
     private Score _score;
 
+    public Score Score => _score;
+
     public Player(bool isSelf, Color color, RodController[] rodControllers, ScoreBoard scoreBoard)
     {
         IsSelf = isSelf;
@@ -29,6 +31,11 @@ public class Player : IPlayerInfo
     {
         _score = _score.Incremented();
         _scoreBoard.DisplayScore(_score);
+    }
+
+    public bool IsWinner()
+    {
+        return _score.IsWinningScore(_scoreBoard.MaxLamps);
     }
 
     public void SeizeRodControlAndReset()
