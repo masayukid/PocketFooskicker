@@ -4099,6 +4099,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1531357423}
   - component: {fileID: 1531357424}
+  - component: {fileID: 1531357426}
+  - component: {fileID: 1531357425}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -4132,6 +4134,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e747c22e0619c3141b0c6291c79529ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selfGoal: {fileID: 841779183}
+  _opponentGoal: {fileID: 441023227}
+  _goalPanel: {fileID: 698869870}
+--- !u!114 &1531357425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531357422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9d2911833b4ca49a35c4db1ec5f750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _selfPlayerColor: {r: 0, g: 0.5195339, b: 0.8773585, a: 1}
   _opponentPlayerColor: {r: 0.7924528, g: 0, b: 0.034529846, a: 1}
   _selfPlayerSet: {fileID: 905073166}
@@ -4139,15 +4156,23 @@ MonoBehaviour:
   _selfScoreBoard: {fileID: 1730880641}
   _opponentScoreBoard: {fileID: 695893970}
   _controlAreas: {fileID: 116688808}
-  _selfGoal: {fileID: 841779183}
-  _opponentGoal: {fileID: 441023227}
-  _goalPanel: {fileID: 698869870}
   _pausePanel: {fileID: 1652910577}
+  _cpuConfig: {fileID: 11400000, guid: b5ea1a4b274fa463da4428a8f5631b4b, type: 2}
+--- !u!114 &1531357426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531357422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c52ab9e8b4e1cf4b8a04b5ca708f467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _ballPrefab: {fileID: 6273729313110264930, guid: 3addafb61036c1e46bfd81c473c2034c,
     type: 3}
   _ballInitialOffset: {x: -0.75, y: 0.4}
-  _cpuConfig: {fileID: 11400000, guid: b5ea1a4b274fa463da4428a8f5631b4b, type: 2}
-  _defaultCPUMode: 1
 --- !u!4 &1547644288 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7982459337374719356, guid: 3006f442da1453e489fcc1885e437dad,
