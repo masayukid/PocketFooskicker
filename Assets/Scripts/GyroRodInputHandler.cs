@@ -9,9 +9,8 @@ public class GyroRodInputHandler : IRodInputHandler
     private Ball _ball;
     private readonly Doll[] _dolls;
 
-    public GyroRodInputHandler(Ball ball, RodController rodController)
+    public GyroRodInputHandler(RodController rodController)
     {
-        _ball = ball;
         _dolls = rodController.GetDolls();
     }
 

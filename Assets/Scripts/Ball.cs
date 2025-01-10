@@ -5,6 +5,8 @@ public class Ball : MonoBehaviour
 {
     public event Action<Collision> OnTouch;
 
+    public bool IsInactive => !gameObject.activeSelf;
+
     private Rigidbody _rigidbody;
 
     void Awake()
