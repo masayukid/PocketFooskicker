@@ -1,206 +1,57 @@
-﻿using System;
-using UnityEngine;
-using System.Linq;
-using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(BallManager))]
+[RequireComponent(typeof(PlayerManager))]
 public class GameController : MonoBehaviour
 {
-    public event Action<Ball> OnSpawnBall;
-
-    private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
-    private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
-
-    [SerializeField] private Color _selfPlayerColor;
-    [SerializeField] private Color _opponentPlayerColor;
-    [SerializeField] private GameObject _selfPlayerSet;
-    [SerializeField] private GameObject _opponentPlayerSet;
-    [SerializeField] private ScoreBoard _selfScoreBoard;
-    [SerializeField] private ScoreBoard _opponentScoreBoard;
-    [SerializeField] private GameObject _controlAreas;
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
     [SerializeField] private GoalPanel _goalPanel;
-    [SerializeField] private PausePanel _pausePanel;
-    [SerializeField] private GameObject _ballPrefab;
-    [SerializeField] private Vector2 _ballInitialOffset;
-    [Header("CPU Settings")]
-    [SerializeField] private CPUConfig _cpuConfig;
-    [SerializeField] private CPUMode _defaultCPUMode;
 
-    private CPUMode _currentCpuMode;
-    private Player _selfPlayer;
-    private Player _opponentPlayer;
-    private Ball _currentBall;
-    private float _respawnTimer;
-    private bool _isSelfTurn;
-    private bool _isKickedOff;
+    private BallManager _ballManager;
+    private PlayerManager _playerManager;
+
+    void Awake()
+    {
+        _ballManager = GetComponent<BallManager>();
+        _playerManager = GetComponent<PlayerManager>();
+    }
 
     void Start()
     {
         SoundManager.Instance.PlayBGM("bgm_main");
         Initialize();
-        SpawnBall();
-    }
-
-    void Update()
-    {
-        HandleBallRespawn();
+        _ballManager.SpawnBall();
     }
 
     private void Initialize()
     {
-        SetupPlayers();
+        _ballManager.OnSpawnBall += (_) => _playerManager.ReturnRodControlAfterWhistle();
+
+        bool gyroEnabled = SystemInfo.supportsGyroscope;
+        _playerManager.SetUpSelfPlayer(_ballManager, gyroEnabled);
+
+        CPUMode cpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", CPUMode.Normal);
+        _playerManager.SetUpOpponentPlayer(_ballManager, cpuMode);
+
         SubscribeGoalEvents();
-        ResetGameState();
-    }
-
-    private void SetupPlayers()
-    {
-        // プレイヤー設定
-        var selfRodControllers = _selfPlayerSet.GetComponentsInChildren<RodController>();
-        IRodInputHandler[] inputHandlers;
-        
-        if (SystemInfo.supportsGyroscope)
-        {
-            // デバイスがジャイロに対応している場合
-            Input.gyro.enabled = true;
-            inputHandlers = selfRodControllers.Select(rod =>
-            {
-                var handler = new GyroRodInputHandler(_currentBall, rod);
-                OnSpawnBall += handler.UpdateBallReference;
-                return handler;
-            }).ToArray();
-
-            _pausePanel.EnableGyroSettings((GyroRodInputHandler[])inputHandlers);
-        }
-        else
-        {
-            inputHandlers = _controlAreas.GetComponentsInChildren<IRodInputHandler>();
-        }
-
-        SetUpRodControllers(selfRodControllers, inputHandlers);
-
-        // CPU設定
-        _currentCpuMode = TransitionManager.Instance.GetDataOrDefault("CPUMode", _defaultCPUMode);
-        var settings = _cpuConfig.GetSettingsByMode(_currentCpuMode);
-
-        var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
-        var cpuInputHandlers = opponentRodControllers.Select(rod =>
-        {
-            var handler = new CPURodInputHandler(_currentBall, rod);
-            OnSpawnBall += handler.UpdateBallReference;
-            return handler;
-        }).ToArray();
-
-        foreach (var cpuHandler in cpuInputHandlers)
-        {
-            cpuHandler.ApplyCPUSettings(settings);
-        }
-
-        SetUpRodControllers(opponentRodControllers, cpuInputHandlers);
-
-        _selfPlayer = new Player(
-            true,
-            _selfPlayerColor,
-            selfRodControllers,
-            _selfScoreBoard
-        );
-
-        _opponentPlayer = new Player(
-            false,
-            _opponentPlayerColor,
-            opponentRodControllers,
-            _opponentScoreBoard
-        );
-    }
-
-    private void SetUpRodControllers(RodController[] rodControllers, IRodInputHandler[] inputHandlers)
-    {
-        if (rodControllers.Length != inputHandlers.Length)
-        {
-            throw new Exception("RodControllerとInputHandlerの要素数が異なります。");
-        }
-
-        for (int i = 0; i < rodControllers.Length; i++)
-        {
-            rodControllers[i].RegisterHandler(inputHandlers[i]);
-        }
     }
 
     private void SubscribeGoalEvents()
     {
-        _selfGoal.OnGoal += OnGoal;
-        _opponentGoal.OnGoal += OnGoal;
+        _selfGoal.OnGoal += HandleGoalEvent;
+        _opponentGoal.OnGoal += HandleGoalEvent;
     }
 
-    private void ResetGameState()
+    private void HandleGoalEvent(Goal goal)
     {
-        _currentBall = null;
-        ResetRespawnTimer();
-        _isSelfTurn = true;
-        _isKickedOff = false;
-    }
+        _ballManager.InactivateCurrentBall();
+        _ballManager.SetTurnPlayer(goal.IsSelf);
+        _playerManager.SeizeRodControlAndReset();
 
-    private void SpawnBall()
-    {
-        StartCoroutine(SpawnBallAfterWhistle());
-    }
-
-    private IEnumerator SpawnBallAfterWhistle()
-    {
-        if (_currentBall != null)
-        {
-            Destroy(_currentBall.gameObject);
-        }
-
-        float offsetX = _isSelfTurn ? _ballInitialOffset.x : -_ballInitialOffset.x;
-        var ballPosition = new Vector3(offsetX, _ballInitialOffset.y, 0);
-        GameObject ballObject = Instantiate(_ballPrefab, ballPosition, Quaternion.identity);
-
-        _currentBall = ballObject.GetComponent<Ball>();
-        _currentBall.OnTouch += OnTouchBall;
-        _isKickedOff = false;
-
-        OnSpawnBall?.Invoke(_currentBall);
-
-        yield return SoundManager.Instance.PlaySECoroutine("se_whistle");
-
-        _selfPlayer.ReturnRodControl();
-        _opponentPlayer.ReturnRodControl();
-    }
-
-    private void HandleBallRespawn()
-    {
-        if (_currentBall == null || !_isKickedOff)
-        {
-            return;
-        }
-
-        if (_currentBall.GetCurrentSpeed() > BALL_RESPAWN_SPEED)
-        {
-            ResetRespawnTimer();
-            return;
-        }
-
-        _respawnTimer += Time.deltaTime;
-
-        if (_respawnTimer > BALL_RESPAWN_TIMEOUT)
-        {
-            SpawnBall();
-        }
-    }
-
-    private void OnGoal(Goal goal)
-    {
-        _currentBall.Inactivate();
-
-        Player goalPlayer = goal.IsSelf ? _opponentPlayer : _selfPlayer;
+        Player goalPlayer = _playerManager.GetPlayer(!goal.IsSelf);
         goalPlayer.AddScore();
-        _isSelfTurn = !goalPlayer.IsSelf;
-
-        _selfPlayer.SeizeRodControlAndReset();
-        _opponentPlayer.SeizeRodControlAndReset();
 
         if (goalPlayer.IsWinner())
         {
@@ -208,40 +59,19 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            _goalPanel.Open(goalPlayer.Color, SpawnBall);
+            _goalPanel.Open(goalPlayer.Color, _ballManager.SpawnBall);
         }
-    }
-
-    private void OnTouchBall(Collision collision)
-    {
-        _isKickedOff = true;
-
-        if (collision.gameObject.CompareTag("Rod"))
-        {
-            SoundManager.Instance.PlaySE("se_kick_ball");
-        }
-        else if (collision.gameObject.CompareTag("Wall"))
-        {
-            SoundManager.Instance.PlaySE("se_collision");
-        }
-        
-        ResetRespawnTimer();
     }
 
     private void EndGame(bool isSelf)
     {
         var resultData = new Dictionary<string, object>
         {
-            { "PlayerScore", _selfPlayer.Score.Value },
-            { "OpponentScore", _opponentPlayer.Score.Value },
+            { "PlayerScore", _playerManager.SelfPlayer.Score.Value },
+            { "OpponentScore", _playerManager.OpponentPlayer.Score.Value },
             { "IsSelfWinner", isSelf },
-            { "CPUMode", _currentCpuMode }
+            { "CPUMode", _playerManager.CurrentCpuMode }
         };
         TransitionManager.Instance.TransitionTo("Result", resultData);
-    }
-
-    private void ResetRespawnTimer()
-    {
-        _respawnTimer = 0;
     }
 }
