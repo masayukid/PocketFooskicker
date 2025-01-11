@@ -27,6 +27,8 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        _ballManager.ClampBallPosition();
+        
         if (_ballManager.IsBallRespawnRequired())
         {
             _ballManager.InactivateCurrentBall();

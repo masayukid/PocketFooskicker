@@ -8,6 +8,10 @@ public class BallManager : MonoBehaviour
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
 
+    [Header("Bounds XZ")]
+    [SerializeField] private Vector2 _min;
+    [SerializeField] private Vector2 _max;
+
     private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
     private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
     private const float VIBRATION_IMPULSE_THRESH = 10.0f;   // バイブレーションを起こす衝撃の閾値
@@ -48,6 +52,19 @@ public class BallManager : MonoBehaviour
     public void SetTurnPlayer(bool isSelf)
     {
         _isSelfTurn = isSelf;
+    }
+
+    public void ClampBallPosition()
+    {
+        if (_currentBall == null)
+        {
+            return;
+        }
+
+        var position = _currentBall.GetPosition();
+        position.x = Mathf.Clamp(position.x, _min.x, _max.x);
+        position.z = Mathf.Clamp(position.z, _min.y, _max.y);
+        _currentBall.transform.position = position;
     }
 
     public bool IsBallRespawnRequired()
