@@ -15,8 +15,7 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        // ToDo: Rodのタグは必要？
-        if (other.gameObject.CompareTag("Rod") || !other.gameObject.CompareTag("Field"))
+        if (!other.gameObject.CompareTag("Field"))
         {
             OnTouch?.Invoke(other);
         }
