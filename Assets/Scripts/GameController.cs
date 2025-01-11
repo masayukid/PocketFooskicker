@@ -4,8 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerManager))]
 public class GameController : MonoBehaviour
 {
-    private const float VIBRATION_IMPULSE_THRESH = 10.0f;   // バイブレーションを起こす衝撃の閾値
-
     [SerializeField] private Goal _selfGoal;
     [SerializeField] private Goal _opponentGoal;
     [SerializeField] private GoalPanel _goalPanel;
@@ -85,19 +83,5 @@ public class GameController : MonoBehaviour
             ("CPUMode", _playerManager.CurrentCpuMode)
         );
         TransitionManager.Instance.TransitionTo(SceneName.Result, resultData);
-    }
-
-    // ToDo: とりあえず残したけど、developでは消えてます
-    private void OnTouchBall(Collision collision)
-    {
-        if (collision.impulse.magnitude > VIBRATION_IMPULSE_THRESH)
-        {
-            var rodController = collision.gameObject.GetComponentInParent<RodController>();
-
-            if (rodController.OwnerInfo.IsSelf)
-            {
-                VibrationManager.ShortVibration();
-            }
-        }
     }
 }

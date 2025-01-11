@@ -10,6 +10,7 @@ public class BallManager : MonoBehaviour
 
     private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
     private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
+    private const float VIBRATION_IMPULSE_THRESH = 10.0f;   // バイブレーションを起こす衝撃の閾値
 
     private Ball _currentBall = null;
     private float _respawnTimer = 0;
@@ -73,6 +74,11 @@ public class BallManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Rod"))
         {
             SoundManager.Instance.PlaySE("se_kick_ball");
+
+            if (ShouldTriggerVibration(collision))
+            {
+                VibrationManager.ShortVibration();
+            }
         }
         else if (collision.gameObject.CompareTag("Wall"))
         {
@@ -80,6 +86,17 @@ public class BallManager : MonoBehaviour
         }
 
         ResetRespawnTimer();
+    }
+
+    private bool ShouldTriggerVibration(Collision collision)
+    {
+        if (collision.impulse.magnitude < VIBRATION_IMPULSE_THRESH)
+        {
+            return false;
+        }
+
+        var rodController = collision.gameObject.GetComponentInParent<RodController>();
+        return rodController.OwnerInfo.IsSelf;
     }
 
     private void ResetRespawnTimer()
