@@ -4175,6 +4175,8 @@ MonoBehaviour:
   _ballPrefab: {fileID: 6273729313110264930, guid: 3addafb61036c1e46bfd81c473c2034c,
     type: 3}
   _ballInitialOffset: {x: -0.75, y: 0.4}
+  _min: {x: -9, y: -4.5}
+  _max: {x: 9, y: 4.5}
 --- !u!4 &1547644288 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7982459337374719356, guid: 3006f442da1453e489fcc1885e437dad,
