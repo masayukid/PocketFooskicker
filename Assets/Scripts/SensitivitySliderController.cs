@@ -29,7 +29,7 @@ public class SensitivitySliderController : MonoBehaviour
 
         // ハンドル位置に合わせてテキスト位置を更新
         var handlePosition = _sensitivitySlider.handleRect.transform.position;
-        _currentValueText.transform.position = new Vector3(handlePosition.x, handlePosition.y + 30, handlePosition.z);
+        _currentValueText.transform.position = new Vector3(handlePosition.x, handlePosition.y + 80, handlePosition.z);
     }
 
     private void OnDestroy()
