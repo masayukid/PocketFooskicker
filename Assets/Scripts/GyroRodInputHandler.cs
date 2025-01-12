@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class GyroRodInputHandler : IRodInputHandler
 {
-    private const float REACTION_DISTANCE = 1.6f; // ボールに反応する最大距離
+    private const float REACTION_DISTANCE = 3.0f; // ボールに反応する最大距離
     private float _movementSensitivity = 1.0f; 
-    private float _rotationSensitivity = 300f;
+    private float _rotationSensitivity = 1000f;
 
     private Ball _ball;
     private readonly Doll[] _dolls;
