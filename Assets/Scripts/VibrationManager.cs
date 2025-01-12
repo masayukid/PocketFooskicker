@@ -6,7 +6,6 @@ public static class VibrationManager
     {
         if (SystemInfo.supportsVibration)
         {
-            PlaySystemSound(1519);
             Vibrate(50);
         }
     }
