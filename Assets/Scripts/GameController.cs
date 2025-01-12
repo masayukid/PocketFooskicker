@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(BallManager))]
 [RequireComponent(typeof(PlayerManager))]
@@ -60,6 +60,7 @@ public class GameController : MonoBehaviour
     private void HandleGoalEvent(Goal goal)
     {
         _ballManager.InactivateCurrentBall();
+        VibrationManager.LongVibration();
         _ballManager.SetTurnPlayer(goal.IsSelf);
         _playerManager.SeizeRodControlAndReset();
 

@@ -10,6 +10,14 @@ public static class VibrationManager
         }
     }
 
+    public static void LongVibration()
+    {
+        if (SystemInfo.supportsVibration)
+        {
+            Vibrate(1000); 
+        }
+    }
+
     // Android設定
 #if UNITY_ANDROID && !UNITY_EDITOR
     public static AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
