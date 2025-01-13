@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class RodController : MonoBehaviour
 {
+    public IPlayerInfo OwnerInfo { get; private set; }
+
     private const float RESET_DURATION = 1.0f;
     private const float MOVE_RANGE = 1.35f; // 可動範囲
 
@@ -39,11 +41,13 @@ public class RodController : MonoBehaviour
         _inputHandler = inputHandler;
     }
 
-    public void SetColor(Color color)
+    public void SetOwnerInfo(IPlayerInfo ownerInfo)
     {
+        OwnerInfo = ownerInfo;
+
         foreach (var doll in _dolls)
         {
-            doll.SetColor(color);
+            doll.SetOwnerInfo(ownerInfo);
         }
     }
 

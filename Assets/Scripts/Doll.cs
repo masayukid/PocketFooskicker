@@ -2,16 +2,20 @@
 
 public class Doll : MonoBehaviour
 {
+    public IPlayerInfo OwnerInfo { get; private set; }
+
     [SerializeField] private Renderer _headRenderer;
     [SerializeField] private Renderer _bodyRenderer;
 
     private float _minZ;
     private float _maxZ;
 
-    public void SetColor(Color color)
+    public void SetOwnerInfo(IPlayerInfo ownerInfo)
     {
-        _headRenderer.material.color = color;
-        _bodyRenderer.material.color = color;
+        OwnerInfo = ownerInfo;
+
+        _headRenderer.material.color = ownerInfo.Color;
+        _bodyRenderer.material.color = ownerInfo.Color;
     }
 
     public void SetMoveRange(float minZ, float maxZ)

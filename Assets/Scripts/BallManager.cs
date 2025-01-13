@@ -8,8 +8,13 @@ public class BallManager : MonoBehaviour
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Vector2 _ballInitialOffset;
 
+    [Header("Bounds XZ")]
+    [SerializeField] private Vector2 _min;
+    [SerializeField] private Vector2 _max;
+
     private const float BALL_RESPAWN_SPEED = 0.05f;     // ボールを再生成する下限速度
     private const float BALL_RESPAWN_TIMEOUT = 3.0f;    // ボールが下限速度を何秒間下回ったら再生成するか
+    private const float VIBRATION_IMPULSE_THRESH = 10.0f;   // バイブレーションを起こす衝撃の閾値
 
     private Ball _currentBall = null;
     private float _respawnTimer = 0;
@@ -49,6 +54,19 @@ public class BallManager : MonoBehaviour
         _isSelfTurn = isSelf;
     }
 
+    public void ClampBallPosition()
+    {
+        if (_currentBall == null)
+        {
+            return;
+        }
+
+        var position = _currentBall.GetPosition();
+        position.x = Mathf.Clamp(position.x, _min.x, _max.x);
+        position.z = Mathf.Clamp(position.z, _min.y, _max.y);
+        _currentBall.transform.position = position;
+    }
+
     public bool IsBallRespawnRequired()
     {
         if (_currentBall == null || _currentBall.IsInactive || !_isKickedOff)
@@ -73,6 +91,11 @@ public class BallManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Rod"))
         {
             SoundManager.Instance.PlaySE("se_kick_ball");
+
+            if (ShouldTriggerVibration(collision))
+            {
+                VibrationManager.ShortVibration();
+            }
         }
         else if (collision.gameObject.CompareTag("Wall"))
         {
@@ -80,6 +103,17 @@ public class BallManager : MonoBehaviour
         }
 
         ResetRespawnTimer();
+    }
+
+    private bool ShouldTriggerVibration(Collision collision)
+    {
+        if (collision.impulse.magnitude < VIBRATION_IMPULSE_THRESH)
+        {
+            return false;
+        }
+
+        var rodController = collision.gameObject.GetComponentInParent<RodController>();
+        return rodController.OwnerInfo.IsSelf;
     }
 
     private void ResetRespawnTimer()

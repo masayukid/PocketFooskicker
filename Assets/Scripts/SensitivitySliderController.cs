@@ -6,6 +6,8 @@ public class SensitivitySliderController : MonoBehaviour
 {
     [SerializeField] private Text _currentValueText; // ハンドルの上の現在値テキスト
 
+    private const float VALUE_TEXT_OFFSET_Y = 80.0f;
+
     private Slider _sensitivitySlider;
 
     private void Awake()
@@ -29,7 +31,12 @@ public class SensitivitySliderController : MonoBehaviour
 
         // ハンドル位置に合わせてテキスト位置を更新
         var handlePosition = _sensitivitySlider.handleRect.transform.position;
-        _currentValueText.transform.position = new Vector3(handlePosition.x, handlePosition.y + 30, handlePosition.z);
+        
+        _currentValueText.transform.position = new Vector3(
+            handlePosition.x,
+            handlePosition.y + VALUE_TEXT_OFFSET_Y,
+            handlePosition.z
+        );
     }
 
     private void OnDestroy()
