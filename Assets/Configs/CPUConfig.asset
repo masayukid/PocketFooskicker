@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _modeSettings:
   - _mode: 0
-    _moveSpeed: 3
+    _moveSpeed: 2
     _rotationSpeed: 2
   - _mode: 1
-    _moveSpeed: 5
-    _rotationSpeed: 4
+    _moveSpeed: 2
+    _rotationSpeed: 3
   - _mode: 2
-    _moveSpeed: 10
-    _rotationSpeed: 7
+    _moveSpeed: 3
+    _rotationSpeed: 3
