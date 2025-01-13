@@ -4,7 +4,7 @@ public class GyroRodInputHandler : IRodInputHandler
 {
     private const float REACTION_DISTANCE = 3.0f; // ボールに反応する最大距離
     private float _movementSensitivity = 1.0f; 
-    private float _rotationSensitivity = 1000f;
+    private float _rotationSensitivity = 800f;
 
     private Ball _ball;
     private readonly Doll[] _dolls;
