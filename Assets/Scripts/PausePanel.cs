@@ -10,7 +10,9 @@ public class PausePanel : MonoBehaviour
 
     [Header("UI Groups")]
     [SerializeField] private GameObject _pauseMenuGroup; 
-    [SerializeField] private GameObject _sensitivitySettingsGroup; 
+    [SerializeField] private GameObject _sensitivitySettingsGroup;
+
+    private CPUMode _currentCpuMode;
 
     public void Open()
     {
@@ -49,6 +51,11 @@ public class PausePanel : MonoBehaviour
         });
     }
 
+    public void SetCurrentCpuMode(CPUMode cpuMode)
+    {
+        _currentCpuMode = cpuMode;
+    }
+
     public void OnClickSettings()
     {
         SoundManager.Instance.PlaySE("se_click");
@@ -61,6 +68,17 @@ public class PausePanel : MonoBehaviour
         SoundManager.Instance.PlaySE("se_click");
         _pauseMenuGroup.SetActive(true);
         _sensitivitySettingsGroup.SetActive(false);
+    }
+
+    public void OnClickRetry()
+    {
+        SoundManager.Instance.PlaySE("se_click");
+        Time.timeScale = 1;
+
+        var data = new TransitionData(
+            ("CPUMode", _currentCpuMode)
+        );
+        TransitionManager.Instance.TransitionTo(SceneName.Main, data);
     }
 
     public void OnClickExit()
