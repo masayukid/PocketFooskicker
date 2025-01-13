@@ -59,8 +59,9 @@ public class GameController : MonoBehaviour
 
     private void HandleGoalEvent(Goal goal)
     {
-        _ballManager.InactivateCurrentBall();
         VibrationManager.LongVibration();
+        
+        _ballManager.InactivateCurrentBall();
         _ballManager.SetTurnPlayer(goal.IsSelf);
         _playerManager.SeizeRodControlAndReset();
 
