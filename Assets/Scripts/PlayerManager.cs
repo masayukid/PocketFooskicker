@@ -79,6 +79,7 @@ public class PlayerManager : MonoBehaviour
     public void SetUpOpponentPlayer(BallManager ballManager, CPUMode cpuMode)
     {
         CurrentCpuMode = cpuMode;
+        _pausePanel.SetCurrentCpuMode(CurrentCpuMode);
         var settings = _cpuConfig.GetSettingsByMode(CurrentCpuMode);
 
         var opponentRodControllers = _opponentPlayerSet.GetComponentsInChildren<RodController>();
