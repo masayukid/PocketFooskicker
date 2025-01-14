@@ -3387,12 +3387,12 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 700
+      value: 1200
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
@@ -3412,7 +3412,7 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99939084
+      value: 0.9990483
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
@@ -3427,12 +3427,12 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.034899585
+      value: -0.043619405
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -250
+      value: -470
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
@@ -3452,7 +3452,7 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -4
+      value: -5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71565493d1e19fc4d9c09750a109bd7a, type: 3}
@@ -4932,7 +4932,7 @@ GameObject:
   - component: {fileID: 1653960969}
   - component: {fileID: 1653960968}
   m_Layer: 5
-  m_Name: FixedCanvas
+  m_Name: ControlAreaCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4967,12 +4967,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -5914,12 +5914,12 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 700
+      value: 1200
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
@@ -5959,7 +5959,7 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 150
+      value: 280
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
@@ -6522,12 +6522,12 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 700
+      value: 1200
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
@@ -6567,7 +6567,7 @@ PrefabInstance:
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -50
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 1866446329202132135, guid: 71565493d1e19fc4d9c09750a109bd7a,
         type: 3}
