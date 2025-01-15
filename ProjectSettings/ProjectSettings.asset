@@ -124,7 +124,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 1.0.0
+  bundleVersion: 1.1.1
   preloadedAssets:
   - {fileID: 11400000, guid: 24737680637034af1a286f5899f46567, type: 2}
   metroInputSource: 0
@@ -268,7 +268,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: d1b57770b6e7c43248d669c1900c53f2, type: 3}
+      m_Icon: {fileID: 2800000, guid: 2d0fac8f7f4c34336aece4dcb96a87da, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
